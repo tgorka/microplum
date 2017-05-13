@@ -11,7 +11,7 @@ export class Gulpfile {
 
     @Task("clean")
     clean(cb: Function) {
-        return del(["./**/*.js", "./**/*.map"], cb);
+        return del(["./lib/**/*.js", "./gulpclass.js", "./**/*.map"], cb);
     }
 
     @Task("build")
