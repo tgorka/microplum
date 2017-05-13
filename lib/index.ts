@@ -8,7 +8,7 @@ const DEFAULT_OPTIONS: DefaultConfig = {
     version: "v1",
     environment: process.env.NODE_ENV || "production",
     pin: [],
-    clientPin: "role:*,cmd:*",
+    clientPin: "version:*,role:*,cmd:*,environment:"+(process.env.NODE_ENV || "production"),
     seneca: {
         log: { level: "info+" },
         transport: {},
@@ -52,8 +52,12 @@ export class SenecaPlum implements Microplum {
         }
     }
 
-    public add(pin: seneca.Pattern, cb: seneca.AddCallback): void {
+    public add(pin: any, cb: seneca.AddCallback): void {
         this.addBasicProperties(pin);
+        if (this.options.environment === "dev" && this.options.developer) {
+            pin.developer = this.options.developer
+        }
+
         this.seneca.add(pin, cb);
         console.log(`[Microplum] Registered service for PIN: ${JSON.stringify(pin)}`);
     }
@@ -71,9 +75,6 @@ export class SenecaPlum implements Microplum {
     protected addBasicProperties(pin: any): any {
         pin.version = pin.version || this.options.version;
         pin.environment = pin.environment || this.options.environment;
-        if (this.options.environment === "dev" && this.options.developer) {
-            pin.developer = this.options.developer
-        }
         return pin;
     }
 
