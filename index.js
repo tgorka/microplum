@@ -1,12 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var Test = (function () {
-    function Test() {
-        this.test = "test";
-    }
-    return Test;
-}());
-exports.Test = Test;
-exports.default = new Test();
+var seneca_1 = require("./lib/seneca");
+exports.default = seneca_1.Seneca;
 
 //# sourceMappingURL=index.js.map
