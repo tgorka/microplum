@@ -1,4 +1,9 @@
 
-const TEST:string = "test";
 
-export default TEST;
+export class Test {
+
+    public test: string = "test";
+
+}
+
+export default new Test();
