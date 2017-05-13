@@ -1,11 +1,11 @@
 import { Gulpclass, SequenceTask, Task } from "gulpclass/Decorators";
+import { spawn } from "child_process";
 
-let gulp = require("gulp");
-let del = require("del");
-let path = require("path");
-let ts = require("gulp-typescript");
-let sourcemaps = require("gulp-sourcemaps");
-let spawn = require("child_process").spawn;
+import * as gulp from "gulp";
+import * as del from "del";
+import * as ts from "gulp-typescript";
+import * as sourcemaps from "gulp-sourcemaps";
+
 
 @Gulpclass()
 export class Gulpfile {
@@ -17,7 +17,7 @@ export class Gulpfile {
 
     @Task("build")
     build() {
-        let tsProject:any = ts.createProject("tsconfig.json");
+        let tsProject: any = ts.createProject("tsconfig.json");
 
         return tsProject.src()
             .pipe(sourcemaps.init())
