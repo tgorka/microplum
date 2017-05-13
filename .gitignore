@@ -44,8 +44,8 @@ jspm_packages
 *.tgz
 
 # typescript output
-*.js.map
-*.js
+#*.js.map
+#*.js
 !gulpfile.js
 
 ## Plugin-specific files:

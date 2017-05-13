@@ -1,0 +1,1 @@
+{"version":3,"sources":["index.ts"],"names":[],"mappings":";;AAEA;IAAA;QAEW,SAAI,GAAW,MAAM,CAAC;IAEjC,CAAC;IAAD,WAAC;AAAD,CAJA,AAIC,IAAA;AAJY,oBAAI;AAMjB,kBAAe,IAAI,IAAI,EAAE,CAAC","file":"index.js","sourcesContent":["\n\nexport class Test {\n\n    public test: string = \"test\";\n\n}\n\nexport default new Test();\n"]}
