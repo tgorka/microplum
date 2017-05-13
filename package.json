@@ -2,7 +2,7 @@
   "name": "microplum",
   "version": "0.0.1",
   "description": "Library that provide persistence layer of communication between microservices.",
-  "main": "index.ts",
+  "main": "index.js",
   "scripts": {
     "start": "node ./node_modules/.bin/gulp",
     "build": "node ./node_modules/.bin/gulp build",
