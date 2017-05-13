@@ -1,2 +1,4 @@
 
-export const TEST:string = "test";
+const TEST:string = "test";
+
+export default TEST;

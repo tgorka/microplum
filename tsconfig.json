@@ -1,0 +1,21 @@
+{
+  "include": [
+    "**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "target": "ES5",
+    "types": [
+      "node"
+    ],
+    "lib": [
+      "ES2015"
+    ],
+    "module": "commonjs",
+    "sourceMap": true,
+    "experimentalDecorators": true
+  }
+}

@@ -45,11 +45,8 @@ jspm_packages
 
 # typescript output
 *.js.map
-config.js
-index.js
-/lib/**/*.js
-/components/**/*.js
-/generated/**/*.js
+*.js
+!gulp.js
 
 ## Plugin-specific files:
 
