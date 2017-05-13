@@ -1,5 +1,6 @@
 import { Config, DefaultConfig, Microplum } from "./model";
 
+import * as bluebird from "bluebird";
 import * as _ from "lodash";
 import * as seneca from "seneca";
 import * as senecaAmqpTransport from "seneca-amqp-transport";
@@ -19,6 +20,7 @@ const DEFAULT_OPTIONS: DefaultConfig = {
 export class SenecaPlum implements Microplum {
 
     public seneca: seneca.Instance;
+    public actPromise: Function;
 
     constructor(public options: Config) {
         this.options = _.merge(DEFAULT_OPTIONS, options);
@@ -45,6 +47,12 @@ export class SenecaPlum implements Microplum {
         });
     }
 
+    public act(pin: any, respond: seneca.ActCallback): void {
+        this.addBasicProperties(pin);
+        this.addAdditionalProperties(pin);
+        this.seneca.act(pin, respond);
+    }
+
     public use(component: Function, pin?: any): void {
         component.bind(this)(this.options);
         if (pin) {
@@ -54,10 +62,7 @@ export class SenecaPlum implements Microplum {
 
     public add(pin: any, cb: seneca.AddCallback): void {
         this.addBasicProperties(pin);
-        if (this.options.environment === "dev" && this.options.developer) {
-            pin.developer = this.options.developer
-        }
-
+        this.addAdditionalProperties(pin);
         this.seneca.add(pin, cb);
         console.log(`[Microplum] Registered service for PIN: ${JSON.stringify(pin)}`);
     }
@@ -78,12 +83,22 @@ export class SenecaPlum implements Microplum {
         return pin;
     }
 
+    protected addAdditionalProperties(pin: any): any {
+        if (this.options.environment === "dev" && this.options.developer) {
+            pin.developer = this.options.developer
+        }
+        return pin;
+    }
+
     /**
      * Set-up seneca with all the middleware libraries.
      */
     protected initSeneca(): void {
         this.seneca = seneca(this.options.seneca);
         this.seneca.use(senecaAmqpTransport);
+        // Promisify the .act() method; to learn more about this technique see:
+        // http://bluebirdjs.com/docs/features.html#promisification-on-steroids
+        this.actPromise = bluebird.promisify(this.act, { context: this });
     }
 
 }

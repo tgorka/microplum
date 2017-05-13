@@ -15,6 +15,7 @@
   "dependencies": {
     "@types/lodash": "^4.14.64",
     "@types/seneca": "^2.1.6",
+    "bluebird": "^3.5.0",
     "lodash": "^4.17.4",
     "seneca": "^3.3.0",
     "seneca-amqp-transport": "^2.1.0",

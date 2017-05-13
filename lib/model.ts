@@ -30,4 +30,7 @@ export interface Microplum {
 
     add(pin: any, cb: Function): void;
 
+    act(pin: any, respond: seneca.ActCallback): void;
+    actPromise: Function;
+
 }
