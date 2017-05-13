@@ -2,7 +2,7 @@
   "name": "microplum",
   "version": "0.0.1",
   "description": "Library that provide persistence layer of communication between microservices.",
-  "main": "index.js",
+  "main": "index.ts",
   "repository": "https://github.com/tgorka/microplum.git",
   "author": "Tomasz Gorka <tomasz@gorka.org.pl>",
   "license": "MIT"
