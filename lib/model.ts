@@ -1,7 +1,9 @@
 import * as seneca from "seneca";
 
 export interface DefaultConfig {
-    version?: string;
+    version?: number;
+    subversion?: number,
+    revision?: number,
     environment?: string;
     developer?: string;
     pin?: string[];

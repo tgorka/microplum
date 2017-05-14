@@ -5,7 +5,9 @@ import * as seneca from "seneca";
 import * as senecaAmqpTransport from "seneca-amqp-transport";
 
 const DEFAULT_OPTIONS: DefaultConfig = {
-    version: "v1",
+    version: 1,
+    subversion: 0,
+    revision: 0,
     environment: process.env.NODE_ENV || "production",
     pin: [],
     clientPin: "version:*,role:*,environment:" + (process.env.NODE_ENV || "production"),
@@ -54,27 +56,25 @@ export class SenecaPlum implements Microplum {
 
     public actPromise(pin: any, user?: any): Promise<any> {
         console.log(`[Microplum] CALL => ${JSON.stringify(pin)}`);
+        if (user) {
+            pin.user = user;
+        }
         if (user && (user.id || user.sub)) {
-            pin.userId = (user.id) ? user.id : `${user.sub || ""}${user.sub || ""}`;
+            pin.userId = (user.id) ? user.id : `${user.iss || ""}${user.sub || ""}`;
         }
         if (user && user.name) {
             pin.userName = user.name;
         }
         return new Promise((resolve, reject) => {
-            try {
-                this.act(pin, (err, data) => {
-                    if (err) {
-                        console.log(`[Microplum] ERR <= ${JSON.stringify(pin)}`);
-                        return reject(err);
-                    } else {
-                        console.log(`[Microplum] ANSWER <= ${JSON.stringify(pin)}`);
-                        return resolve(data);
-                    }
-                });
-            } catch (ex) {
-                console.log(`[Microplum] ERR <= ${JSON.stringify(pin)}`);
-                return reject(ex);
-            }
+            this.act(pin, (err, data) => {
+                if (err) {
+                    console.log(`[Microplum] ERR <= ${JSON.stringify(pin)}`);
+                    return reject(err);
+                } else {
+                    console.log(`[Microplum] ANSWER <= ${JSON.stringify(pin)}`);
+                    return resolve(data);
+                }
+            });
         });
     }
 
@@ -108,6 +108,8 @@ export class SenecaPlum implements Microplum {
 
     protected addBasicProperties(pin: any): any {
         pin.version = pin.version || this.options.version;
+        pin.subversion = pin.subversion || this.options.subversion;
+        pin.revision = pin.revision || this.options.revision;
         pin.environment = pin.environment || this.options.environment;
         return pin;
     }
