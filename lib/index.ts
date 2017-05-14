@@ -45,6 +45,7 @@ export class SenecaPlum implements Microplum {
             pin: this.options.clientPin,
             url: this.options.amqpUrl
         });
+        console.log(`[Microplum] Registered client for PIN: ${this.options.clientPin}`);
     }
 
     public act(pin: any, respond: seneca.ActCallback): void {

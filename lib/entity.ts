@@ -7,8 +7,10 @@ export abstract class ServiceEntity implements Entity {
 
     public plugin(): Function {
         let addServices = this.addServices.bind(this);
+        let addDefaultService = this.addDefaultService.bind(this);
         return function (options) {
             addServices(this, options);
+            addDefaultService(this, options);
         }
     }
 
@@ -18,7 +20,20 @@ export abstract class ServiceEntity implements Entity {
 
     protected abstract addServices(seneca: any, options: any): void;
 
-    protected pin(role: string, cmd: string, options: any): any {
+    protected addDefaultService(seneca: any, options: any): void {
+        seneca.add(this.publicPin(), this.handleService(
+            args => {
+                console.log("[Microplum] Invalid arguments witm MSG", JSON.stringify(args));
+                return Promise.resolve({
+                    status: false,
+                    code: 404,
+                    msg: `Unknown service from ${this.publicPin()}`
+                })
+            }
+        ));
+    };
+
+    protected pin(role: string, cmd: string): any {
         let pin = Object.assign({}, this.servicePin || {});
         pin.role = role;
         pin.cmd = cmd;
@@ -53,22 +68,22 @@ export abstract class ServiceEntity implements Entity {
  */
 export class RestEntity extends ServiceEntity {
     protected addServices(seneca: any, options: any): void {
-        seneca.add(this.pin(this.name, "find", options), this.handleService(
+        seneca.add(this.pin(this.name, "find"), this.handleService(
             args => this.facade.find(args.conditions)
         ));
-        seneca.add(this.pin(this.name, "findOne", options), this.handleService(
+        seneca.add(this.pin(this.name, "findOne"), this.handleService(
             args => this.facade.findOne(args.conditions)
         ));
-        seneca.add(this.pin(this.name, "findById", options), this.handleService(
+        seneca.add(this.pin(this.name, "findById"), this.handleService(
             args => this.facade.findById(args.id)
         ));
-        seneca.add(this.pin(this.name, "create", options), this.handleService(
+        seneca.add(this.pin(this.name, "create"), this.handleService(
             args => this.facade.create(args.input)
         ));
-        seneca.add(this.pin(this.name, "update", options), this.handleService(
+        seneca.add(this.pin(this.name, "update"), this.handleService(
             args => this.facade.update(args.conditions, args.input)
         ));
-        seneca.add(this.pin(this.name, "remove", options), this.handleService(
+        seneca.add(this.pin(this.name, "remove"), this.handleService(
             args => this.facade.remove(args.id)
         ));
     }
