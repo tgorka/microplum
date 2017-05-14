@@ -61,15 +61,20 @@ export class SenecaPlum implements Microplum {
             pin.userName = user.name;
         }
         return new Promise((resolve, reject) => {
-            this.act(pin, (err, data) => {
-                if (err) {
-                    console.log(`[Microplum] ERR <= ${pin}`);
-                    reject(err);
-                } else {
-                    console.log(`[Microplum] ANSWER <= ${pin}`);
-                    resolve(data);
-                }
-            })
+            try {
+                this.act(pin, (err, data) => {
+                    if (err) {
+                        console.log(`[Microplum] ERR <= ${pin}`);
+                        return reject(err);
+                    } else {
+                        console.log(`[Microplum] ANSWER <= ${pin}`);
+                        return resolve(data);
+                    }
+                });
+            } catch (ex) {
+                console.log(`[Microplum] ERR <= ${pin}`);
+                return reject(ex);
+            }
         });
     }
 
