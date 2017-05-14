@@ -10,7 +10,7 @@ const DEFAULT_OPTIONS: DefaultConfig = {
     revision: 0,
     environment: process.env.NODE_ENV || "production",
     pin: [],
-    clientPin: "version:*,role:*,environment:" + (process.env.NODE_ENV || "production"),
+    clientPin: "version:*,subversion:*,revision:*,role:*,environment:" + (process.env.NODE_ENV || "production"),
     seneca: {
         log: "standard",
         transport: {},
