@@ -53,7 +53,7 @@ export class SenecaPlum implements Microplum {
     }
 
     public actPromise(pin: any, user?: any): Promise<any> {
-        console.log(`[Microplum] CALL => ${pin}`);
+        console.log(`[Microplum] CALL => ${JSON.stringify(pin)}`);
         if (user && (user.id || user.sub)) {
             pin.userId = (user.id) ? user.id : `${user.sub || ""}${user.sub || ""}`;
         }
@@ -64,15 +64,15 @@ export class SenecaPlum implements Microplum {
             try {
                 this.act(pin, (err, data) => {
                     if (err) {
-                        console.log(`[Microplum] ERR <= ${pin}`);
+                        console.log(`[Microplum] ERR <= ${JSON.stringify(pin)}`);
                         return reject(err);
                     } else {
-                        console.log(`[Microplum] ANSWER <= ${pin}`);
+                        console.log(`[Microplum] ANSWER <= ${JSON.stringify(pin)}`);
                         return resolve(data);
                     }
                 });
             } catch (ex) {
-                console.log(`[Microplum] ERR <= ${pin}`);
+                console.log(`[Microplum] ERR <= ${JSON.stringify(pin)}`);
                 return reject(ex);
             }
         });
