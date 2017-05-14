@@ -115,6 +115,9 @@ export class SenecaPlum implements Microplum {
     }
 
     protected addAdditionalProperties(pin: any): any {
+        if (this.options.debugUserId) {
+            pin.userId = this.options.debugUserId;
+        }
         return pin;
     }
 
