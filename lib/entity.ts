@@ -2,7 +2,7 @@ import { Entity } from "./model";
 
 export abstract class ServiceEntity implements Entity {
 
-    constructor(public name: string, public facade: any) {
+    constructor(public name: string, public facade: any, public servicePin?: any) {
     }
 
     public plugin(): Function {
@@ -19,7 +19,7 @@ export abstract class ServiceEntity implements Entity {
     protected abstract addServices(seneca: any, options: any): void;
 
     protected pin(role: string, cmd: string, options: any): any {
-        let pin = Object.assign({}, options.pin || {});
+        let pin = Object.assign({}, this.servicePin || {});
         pin.role = role;
         pin.cmd = cmd;
         return pin;
