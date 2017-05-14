@@ -1,6 +1,5 @@
 import { Config, DefaultConfig, Entity, Microplum } from "./model";
 
-import * as bluebird from "bluebird";
 import * as _ from "lodash";
 import * as seneca from "seneca";
 import * as senecaAmqpTransport from "seneca-amqp-transport";
@@ -11,7 +10,7 @@ const DEFAULT_OPTIONS: DefaultConfig = {
     pin: [],
     clientPin: "version:*,role:*,environment:" + (process.env.NODE_ENV || "production"),
     seneca: {
-        log: { level: "info+" },
+        log: "standard",
         transport: {},
         timeout: 5000
     },
@@ -20,7 +19,6 @@ const DEFAULT_OPTIONS: DefaultConfig = {
 export class SenecaPlum implements Microplum {
 
     public seneca: seneca.Instance;
-    public actPromise: Function;
 
     constructor(public options: Config) {
         this.options = _.merge(DEFAULT_OPTIONS, options);
@@ -52,6 +50,27 @@ export class SenecaPlum implements Microplum {
         this.addBasicProperties(pin);
         this.addAdditionalProperties(pin);
         this.seneca.act(pin, respond);
+    }
+
+    public actPromise(pin: any, user?: any): Promise<any> {
+        console.log(`[Microplum] CALL => ${pin}`);
+        if (user && (user.id || user.sub)) {
+            pin.userId = (user.id) ? user.id : `${user.sub || ""}${user.sub || ""}`;
+        }
+        if (user && user.name) {
+            pin.userName = user.name;
+        }
+        return new Promise((resolve, reject) => {
+            this.act(pin, (err, data) => {
+                if (err) {
+                    console.log(`[Microplum] ERR <= ${pin}`);
+                    reject(err);
+                } else {
+                    console.log(`[Microplum] ANSWER <= ${pin}`);
+                    resolve(data);
+                }
+            })
+        });
     }
 
     public useService(service: Entity, pin?: any): void {
@@ -101,9 +120,6 @@ export class SenecaPlum implements Microplum {
     protected initSeneca(): void {
         this.seneca = seneca(this.options.seneca);
         this.seneca.use(senecaAmqpTransport);
-        // Promisify the .act() method; to learn more about this technique see:
-        // http://bluebirdjs.com/docs/features.html#promisification-on-steroids
-        this.actPromise = bluebird.promisify(this.act, { context: this });
     }
 
 }
