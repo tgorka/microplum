@@ -5,7 +5,6 @@ export interface DefaultConfig {
     subversion?: number,
     revision?: number,
     environment?: string;
-    developer?: string;
     pin?: string[];
     clientPin?: string;
     seneca?: seneca.Options;
@@ -14,6 +13,7 @@ export interface DefaultConfig {
 export interface Config extends DefaultConfig {
     app: string;
     amqpUrl: string;
+    debugUserId?: string;
 }
 
 export interface Microplum {

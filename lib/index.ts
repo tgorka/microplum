@@ -115,9 +115,6 @@ export class SenecaPlum implements Microplum {
     }
 
     protected addAdditionalProperties(pin: any): any {
-        if (this.options.environment === "dev" && this.options.developer) {
-            pin.developer = this.options.developer
-        }
         return pin;
     }
 
