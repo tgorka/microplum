@@ -5,5 +5,8 @@ var sourceMapSupport = require("source-map-support");
 sourceMapSupport.install();
 var lib_1 = require("./lib");
 exports.default = lib_1.SenecaPlum;
+var entity_1 = require("./lib/entity");
+exports.ServiceEntity = entity_1.ServiceEntity;
+exports.RestEntity = entity_1.RestEntity;
 
 //# sourceMappingURL=index.js.map

@@ -28,9 +28,24 @@ export interface Microplum {
 
     use(component: Function, pin?: any): void;
 
+    useService(service: Entity, pin?: any): void
+
     add(pin: any, cb: Function): void;
 
     act(pin: any, respond: seneca.ActCallback): void;
     actPromise: Function;
+
+}
+
+export interface Entity {
+
+    /**
+     * Module seneca service definition.
+     * @param options
+     * @return seneca plugin
+     */
+    plugin(): Function;
+
+    publicPin(): any;
 
 }

@@ -1,4 +1,4 @@
-import { Config, DefaultConfig, Microplum } from "./model";
+import { Config, DefaultConfig, Entity, Microplum } from "./model";
 
 import * as bluebird from "bluebird";
 import * as _ from "lodash";
@@ -9,7 +9,7 @@ const DEFAULT_OPTIONS: DefaultConfig = {
     version: "v1",
     environment: process.env.NODE_ENV || "production",
     pin: [],
-    clientPin: "version:*,role:*,cmd:*,environment:"+(process.env.NODE_ENV || "production"),
+    clientPin: "version:*,role:*,cmd:*,environment:" + (process.env.NODE_ENV || "production"),
     seneca: {
         log: { level: "info+" },
         transport: {},
@@ -53,6 +53,10 @@ export class SenecaPlum implements Microplum {
         this.seneca.act(pin, respond);
     }
 
+    public useService(service: Entity, pin?: any): void {
+        this.use(service.plugin(), pin || service.publicPin());
+    }
+
     public use(component: Function, pin?: any): void {
         component.bind(this)(this.options);
         if (pin) {
@@ -69,7 +73,7 @@ export class SenecaPlum implements Microplum {
 
     protected addPin(pin: any): void {
         this.addBasicProperties(pin);
-        let realPin:string = Object.keys(pin)
+        let realPin: string = Object.keys(pin)
             .map(key => `${key}:${pin[key]}`)
             .join(",");
 

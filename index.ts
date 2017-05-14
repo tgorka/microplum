@@ -4,3 +4,4 @@ sourceMapSupport.install();
 
 export { SenecaPlum as default } from "./lib";
 export { Microplum, Config } from "./lib/model";
+export { ServiceEntity, RestEntity } from "./lib/entity";
