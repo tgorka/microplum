@@ -65,6 +65,7 @@ export class SenecaPlum implements Microplum {
         if (user && user.name) {
             pin.userName = user.name;
         }
+        pin.fatal$ = false; // all errors are not fatal errors //TODO: check it on production
         return new Promise((resolve, reject) => {
             this.act(pin, (err, data) => {
                 if (err) {
