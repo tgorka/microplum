@@ -2,7 +2,30 @@ import { Entity } from "./model";
 
 export abstract class ServiceEntity implements Entity {
 
+    private _act: Function;
+    private _user: any;
+
     constructor(public name: string, public facade: any, public servicePin?: any) {
+        this._act = (...args) => {
+            console.log("[Microplum] '.act' not set in the service entity. Please use setAct method before.");
+            throw new Error("'.act' service not found.")
+        };
+        this._user = null;
+    }
+
+    public setAct(act: Function) {
+        this._act = act;
+    }
+
+    public setUser(user: any): void {
+        this._user = user;
+    }
+
+    public async act(args: any): Promise<any> {
+        if (this._user) {
+            args.user = args.user || this._user;
+        }
+        return this._act(args);
     }
 
     public plugin(): Function {
@@ -68,23 +91,52 @@ export abstract class ServiceEntity implements Entity {
  */
 export class RestEntity extends ServiceEntity {
     protected addServices(seneca: any, options: any): void {
-        seneca.add(this.pin(this.name, "find"), this.handleService(
-            args => this.facade.find(args.conditions)
-        ));
-        seneca.add(this.pin(this.name, "findOne"), this.handleService(
-            args => this.facade.findOne(args.conditions)
-        ));
-        seneca.add(this.pin(this.name, "findById"), this.handleService(
-            args => this.facade.findById(args.id)
-        ));
-        seneca.add(this.pin(this.name, "create"), this.handleService(
-            args => this.facade.create(args.input)
-        ));
-        seneca.add(this.pin(this.name, "update"), this.handleService(
-            args => this.facade.update(args.conditions, args.input)
-        ));
-        seneca.add(this.pin(this.name, "remove"), this.handleService(
-            args => this.facade.remove(args.id)
-        ));
+        this.addGetServices(seneca);
+        this.addStatisticalServices(seneca);
+        this.addModifyServices(seneca);
+    }
+
+    protected addGetServices(seneca: any): void {
+        if (this.facade.find) {
+            seneca.add(this.pin(this.name, "find"), this.handleService(
+                args => this.facade.find(args.conditions)
+            ));
+        }
+        if (this.facade.findOne) {
+            seneca.add(this.pin(this.name, "findOne"), this.handleService(
+                args => this.facade.findOne(args.conditions)
+            ));
+        }
+        if (this.facade.findById) {
+            seneca.add(this.pin(this.name, "findById"), this.handleService(
+                args => this.facade.findById(args.id)
+            ));
+        }
+    }
+
+    protected addStatisticalServices(seneca: any): void {
+        if (this.facade.count) {
+            seneca.add(this.pin(this.name, "count"), this.handleService(
+                args => this.facade.count(args.conditions)
+            ));
+        }
+    }
+
+    protected addModifyServices(seneca: any): void {
+        if (this.facade.create) {
+            seneca.add(this.pin(this.name, "create"), this.handleService(
+                args => this.facade.create(args.input)
+            ));
+        }
+        if (this.facade.update) {
+            seneca.add(this.pin(this.name, "update"), this.handleService(
+                args => this.facade.update(args.conditions, args.input)
+            ));
+        }
+        if (this.facade.remove) {
+            seneca.add(this.pin(this.name, "remove"), this.handleService(
+                args => this.facade.remove(args.id)
+            ));
+        }
     }
 }

@@ -70,6 +70,7 @@ export class SenecaPlum implements Microplum {
             this.act(pin, (err, data) => {
                 if (err) {
                     console.log(`[Microplum] ERR <= ${JSON.stringify(pin)}`);
+                    console.error(err);
                     return reject(err);
                 } else {
                     console.log(`[Microplum] ANSWER <= ${JSON.stringify(pin)}`);
@@ -80,6 +81,7 @@ export class SenecaPlum implements Microplum {
     }
 
     public useService(service: Entity, pin?: any): void {
+        service.setAct(this.actPromise.bind(this));
         this.use(service.plugin(), pin || service.publicPin());
     }
 
