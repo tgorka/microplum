@@ -50,7 +50,6 @@ export interface Entity {
 
     publicPin(): any;
     setAct(act: Function): void;
-    act(args: any): Promise<any>;
-    setUser(user: any): void;
+    getAct(user?: any): Function;
 
 }

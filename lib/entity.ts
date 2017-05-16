@@ -2,30 +2,26 @@ import { Entity } from "./model";
 
 export abstract class ServiceEntity implements Entity {
 
-    private _act: Function;
-    private _user: any;
+    private act: Function;
 
     constructor(public name: string, public facade: any, public servicePin?: any) {
-        this._act = (...args) => {
+        this.act = (...args) => {
             console.log("[Microplum] '.act' not set in the service entity. Please use setAct method before.");
             throw new Error("'.act' service not found.")
         };
-        this._user = null;
     }
 
     public setAct(act: Function) {
-        this._act = act;
+        this.act = act;
     }
 
-    public setUser(user: any): void {
-        this._user = user;
-    }
-
-    public async act(args: any): Promise<any> {
-        if (this._user) {
-            args.user = args.user || this._user;
-        }
-        return this._act(args);
+    public getAct(user?: any): Function {
+        return (args) => {
+            if (user) {
+                args.user = args.user || user;
+            }
+            return this.act(args);
+        };
     }
 
     public plugin(): Function {
