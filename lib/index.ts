@@ -74,7 +74,17 @@ export class SenecaPlum implements Microplum {
                     return reject(err);
                 } else {
                     console.log(`[Microplum] ANSWER <= ${JSON.stringify(pin)}`);
-                    return resolve(data);
+                    if (data && typeof data.status === "boolean") {
+                        if (data.status) {
+                            return resolve(data.data);
+                        } else if (data.err) {
+                            return reject(data.err);
+                        } else {
+                            return reject(data);
+                        }
+                    } else {
+                        return resolve(data);
+                    }
                 }
             });
         });
