@@ -77,8 +77,8 @@ export class SenecaPlum implements Microplum {
                     if (data && typeof data.status === "boolean") {
                         if (data.status) {
                             return resolve(data.data);
-                        } else if (data.err) {
-                            return reject(data.err);
+                        } else if (data.error) {
+                            return reject(data.error);
                         } else {
                             return reject(data);
                         }
