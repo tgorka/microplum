@@ -17,13 +17,19 @@ export class NotFoundPlumError extends PlumError {
 
 export class ForbiddenPlumError extends PlumError {
     constructor(message: string = "Access forbidden") {
-        super(404, PlumErrorNames.forbidden, message);
+        super(403, PlumErrorNames.forbidden, message);
     }
 }
 
 export class UnauthorizedPlumError extends PlumError {
     constructor(message: string = "Unauthorized access") {
-        super(404, PlumErrorNames.unauthorized, message);
+        super(401, PlumErrorNames.unauthorized, message);
+    }
+}
+
+export class ParametersPlumError extends PlumError {
+    constructor(message: string) {
+        super(400, PlumErrorNames.parameters_error, message);
     }
 }
 
@@ -33,8 +39,8 @@ export class FieldError {
 }
 
 export class ValidationPlumError extends PlumError {
-    constructor(message: string = null, public fields: FieldError[]) {
-        super(404, PlumErrorNames.validation_error, message);
+    constructor(public fields: Object, message: string = null) {
+        super(422, PlumErrorNames.validation_error, message);
     }
 }
 
@@ -52,6 +58,7 @@ export const PlumErrorNames = strEnum([
     "not_found",
     "forbidden",
     "unauthorized",
+    "parameters_error",
     "validation_error",
 ]);
 /** Create a Type */
