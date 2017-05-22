@@ -45,7 +45,7 @@ export class ValidationPlumError extends PlumError {
 }
 
 export class PreconditionFailedPlumError extends PlumError {
-    constructor(public fields: Object, message: string = null) {
+    constructor(message: string = null) {
         super(412, PlumErrorNames.predondition_error, message);
     }
 }
