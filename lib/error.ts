@@ -44,6 +44,12 @@ export class ValidationPlumError extends PlumError {
     }
 }
 
+export class PreconditionFailedPlumError extends PlumError {
+    constructor(public fields: Object, message: string = null) {
+        super(412, PlumErrorNames.predondition_error, message);
+    }
+}
+
 /** Utility function to create a K:V from a list of strings */
 function strEnum<T extends string>(o: Array<T>): {[K in T]: K} {
     return o.reduce((res, key) => {
@@ -60,6 +66,7 @@ export const PlumErrorNames = strEnum([
     "unauthorized",
     "parameters_error",
     "validation_error",
+    "predondition_error",
 ]);
 /** Create a Type */
 export type PlumErrorNames = keyof typeof PlumErrorNames;
