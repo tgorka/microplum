@@ -19,6 +19,11 @@ export interface Config extends DefaultConfig {
 export interface Microplum {
 
     /**
+     * Close the connection. Use it before exiting the app.
+     */
+    close(): void;
+
+    /**
      * Listen app trigger os selected configuration.
      */
     listen(): void;

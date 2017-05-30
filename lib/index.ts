@@ -28,6 +28,11 @@ export class SenecaPlum implements Microplum {
         this.initSeneca();
     }
 
+    public close(): void {
+        this.seneca.close();
+        console.log(`[Microplum] Closing the connections.`);
+    }
+
     public listen(): void {
         this.seneca.listen({
             type: "amqp",
