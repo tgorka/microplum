@@ -1,6 +1,6 @@
 {
   "name": "microplum",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Library that provide persistence layer of communication between microservices.",
   "main": "index.js",
   "scripts": {

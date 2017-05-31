@@ -4,6 +4,16 @@ import * as _ from "lodash";
 import * as seneca from "seneca";
 import * as senecaAmqpTransport from "seneca-amqp-transport";
 
+/**
+ * Seneca interface for updating with non specified seneca methods
+ */
+interface Seneca extends seneca.Instance {
+    /**
+     * Close connection to the queue. Use it on closing the app to be sure that no zombie connections have stayed.
+     */
+    close(): void;
+}
+
 const DEFAULT_OPTIONS: DefaultConfig = {
     version: 1,
     subversion: 0,
@@ -20,7 +30,7 @@ const DEFAULT_OPTIONS: DefaultConfig = {
 
 export class SenecaPlum implements Microplum {
 
-    public seneca: seneca.Instance;
+    public seneca: Seneca;
 
     constructor(public options: Config) {
         this.options = _.merge(DEFAULT_OPTIONS, options);
@@ -143,7 +153,7 @@ export class SenecaPlum implements Microplum {
      * Set-up seneca with all the middleware libraries.
      */
     protected initSeneca(): void {
-        this.seneca = seneca(this.options.seneca);
+        this.seneca = <Seneca>seneca(this.options.seneca);
         this.seneca.use(senecaAmqpTransport);
     }
 
