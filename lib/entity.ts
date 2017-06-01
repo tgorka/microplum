@@ -1,4 +1,5 @@
 import { Entity } from "./model";
+import { PlumError } from "./error";
 
 export abstract class ServiceEntity implements Entity {
 
@@ -63,8 +64,14 @@ export abstract class ServiceEntity implements Entity {
         let escapeDoc = this.escapeDoc.bind(this);
         return function (args, done) {
             cb(args)
-                .then(doc => done(null, escapeDoc(doc)))
-                .catch(err => done(err));
+                .then(doc => done(null, { status: true, data: escapeDoc(doc) }))
+                .catch(err => {
+                    if (err instanceof PlumError) {
+                        done(null, { status: false, error: err });
+                    } else {
+                        done(err);
+                    }
+                });
         };
     }
 

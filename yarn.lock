@@ -19,13 +19,42 @@
     normalize-path "^2.0.1"
     through2 "^2.0.3"
 
+"@types/gulp@^4.0.3":
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/@types/gulp/-/gulp-4.0.3.tgz#6c5a990678bfdbb894ebb9f113ccdf82b1b9d547"
+  dependencies:
+    "@types/node" "*"
+    "@types/orchestrator" "*"
+    "@types/vinyl" "*"
+
 "@types/lodash@^4.14.64":
   version "4.14.64"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.64.tgz#979cf3a3d4a368670840bf9b3e448dc33ffe84ee"
 
+"@types/node@*":
+  version "7.0.23"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.23.tgz#ededfd92e61046c32fcad56ea7e1101733fad4a4"
+
+"@types/orchestrator@*":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@types/orchestrator/-/orchestrator-0.3.0.tgz#bf84a1699c9330d4fe89cd81263e8fc09fb32978"
+  dependencies:
+    "@types/node" "*"
+    "@types/q" "^0"
+
+"@types/q@^0":
+  version "0.0.34"
+  resolved "https://registry.yarnpkg.com/@types/q/-/q-0.0.34.tgz#e5d3a54e7a56309d904cdf1dc34f61ac595fae2e"
+
 "@types/seneca@^2.1.6":
   version "2.1.6"
   resolved "https://registry.yarnpkg.com/@types/seneca/-/seneca-2.1.6.tgz#a75d2852838bae585b05de79825979a12a0dd2fb"
+
+"@types/vinyl@*":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@types/vinyl/-/vinyl-2.0.0.tgz#fd213bf7f4136dde21fe1895500b12c186f8c268"
+  dependencies:
+    "@types/node" "*"
 
 acorn@4.X:
   version "4.0.11"
@@ -588,9 +617,9 @@ gulp-sourcemaps@^2.6.0:
     through2 "2.X"
     vinyl "1.X"
 
-gulp-typescript@^3.1.6:
-  version "3.1.6"
-  resolved "https://registry.yarnpkg.com/gulp-typescript/-/gulp-typescript-3.1.6.tgz#6c67b84364cf3589a9ad6fdea2e3c0bc525c435e"
+gulp-typescript@^3.1.7:
+  version "3.1.7"
+  resolved "https://registry.yarnpkg.com/gulp-typescript/-/gulp-typescript-3.1.7.tgz#d88600a914153f11c09c9a5ca8c2561ec75a4978"
   dependencies:
     gulp-util "~3.0.7"
     source-map "~0.5.3"
@@ -1438,6 +1467,18 @@ sequencify@~0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/sequencify/-/sequencify-0.0.7.tgz#90cff19d02e07027fd767f5ead3e7b95d1e7380c"
 
+"servicelychee@https://github.com/tgorka/servicelychee":
+  version "0.0.1"
+  resolved "https://github.com/tgorka/servicelychee#31578ee25f50396941c0351572370fc02477b1f9"
+  dependencies:
+    "@types/gulp" "^4.0.3"
+    child_process "^1.0.2"
+    del "^2.2.2"
+    gulp "^3.9.1"
+    gulp-sourcemaps "^2.6.0"
+    gulp-typescript "^3.1.7"
+    gulpclass "^0.1.2"
+
 shortid@^2.2.6:
   version "2.2.8"
   resolved "https://registry.yarnpkg.com/shortid/-/shortid-2.2.8.tgz#033b117d6a2e975804f6f0969dbe7d3d0b355131"
@@ -1573,10 +1614,6 @@ to-absolute-glob@^0.1.1:
   resolved "https://registry.yarnpkg.com/to-absolute-glob/-/to-absolute-glob-0.1.1.tgz#1cdfa472a9ef50c239ee66999b662ca0eb39937f"
   dependencies:
     extend-shallow "^2.0.1"
-
-typescript@^2.3.2:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.3.2.tgz#f0f045e196f69a72f06b25fd3bd39d01c3ce9984"
 
 unc-path-regex@^0.1.0:
   version "0.1.2"
