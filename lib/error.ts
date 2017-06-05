@@ -1,52 +1,52 @@
 export class PlumError {
-    constructor(public code: number, public name: string, public message: string) {
+    constructor(public status: number, public code: string, public message: string) {
     };
 }
 
 export class ServerPlumError extends PlumError {
     constructor(message: string = "Unexpected server error") {
-        super(500, PlumErrorNames.server_error, message);
+        super(500, PlumErrorCodes.server_error, message);
     }
 }
 
 export class NotFoundPlumError extends PlumError {
     constructor(message: string = "Entity not found error") {
-        super(404, PlumErrorNames.not_found, message);
+        super(404, PlumErrorCodes.not_found, message);
     }
 }
 
 export class ForbiddenPlumError extends PlumError {
     constructor(message: string = "Access forbidden") {
-        super(403, PlumErrorNames.forbidden, message);
+        super(403, PlumErrorCodes.forbidden, message);
     }
 }
 
 export class UnauthorizedPlumError extends PlumError {
     constructor(message: string = "Unauthorized access") {
-        super(401, PlumErrorNames.unauthorized, message);
+        super(401, PlumErrorCodes.unauthorized, message);
     }
 }
 
 export class ParametersPlumError extends PlumError {
     constructor(message: string) {
-        super(400, PlumErrorNames.parameters_error, message);
+        super(400, PlumErrorCodes.parameters_error, message);
     }
 }
 
 export class FieldError {
-    constructor(public field: string, public name: string, public message: string) {
+    constructor(public code: string, public message: string) {
     }
 }
 
 export class ValidationPlumError extends PlumError {
-    constructor(public fields: Object, message: string = null) {
-        super(422, PlumErrorNames.validation_error, message);
+    constructor(public fields: { [key: string]: FieldError; }, message: string = null) {
+        super(422, PlumErrorCodes.validation_error, message);
     }
 }
 
 export class PreconditionFailedPlumError extends PlumError {
     constructor(message: string = null) {
-        super(412, PlumErrorNames.predondition_error, message);
+        super(412, PlumErrorCodes.predondition_error, message);
     }
 }
 
@@ -59,7 +59,7 @@ function strEnum<T extends string>(o: Array<T>): {[K in T]: K} {
 }
 
 /** Create a K:V */
-export const PlumErrorNames = strEnum([
+export const PlumErrorCodes = strEnum([
     "server_error",
     "not_found",
     "forbidden",
@@ -69,4 +69,4 @@ export const PlumErrorNames = strEnum([
     "predondition_error",
 ]);
 /** Create a Type */
-export type PlumErrorNames = keyof typeof PlumErrorNames;
+export type PlumErrorCodes = keyof typeof PlumErrorCodes;
