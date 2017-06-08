@@ -126,6 +126,7 @@ export class SenecaPlum implements Microplum {
 
     protected addPin(pin: any): void {
         this.addBasicProperties(pin);
+        pin.provider = "*";
         let realPin: string = Object.keys(pin)
             .map(key => `${key}:${pin[key]}`)
             .join(",");

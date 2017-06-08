@@ -42,7 +42,7 @@ export abstract class ServiceEntity implements Entity {
 
     protected addDefaultService(seneca: any, options: any): void {
         seneca.add(this.publicPin(), this.handleService(
-            args => {
+            async args => {
                 console.log("[Microplum] Invalid arguments witm MSG", JSON.stringify(args));
                 return Promise.resolve({
                     status: false,
@@ -102,17 +102,17 @@ export class RestEntity extends ServiceEntity {
     protected addGetServices(seneca: any): void {
         if (this.facade.find) {
             seneca.add(this.pin(this.name, "find"), this.handleService(
-                args => this.facade.find(args.conditions)
+                async args => this.facade.find(args.conditions)
             ));
         }
         if (this.facade.findOne) {
             seneca.add(this.pin(this.name, "findOne"), this.handleService(
-                args => this.facade.findOne(args.conditions)
+                async args => this.facade.findOne(args.conditions)
             ));
         }
         if (this.facade.findById) {
             seneca.add(this.pin(this.name, "findById"), this.handleService(
-                args => this.facade.findById(args.id)
+                async args => this.facade.findById(args.id)
             ));
         }
     }
@@ -120,7 +120,7 @@ export class RestEntity extends ServiceEntity {
     protected addStatisticalServices(seneca: any): void {
         if (this.facade.count) {
             seneca.add(this.pin(this.name, "count"), this.handleService(
-                args => this.facade.count(args.conditions)
+                async args => this.facade.count(args.conditions)
             ));
         }
     }
@@ -128,17 +128,17 @@ export class RestEntity extends ServiceEntity {
     protected addModifyServices(seneca: any): void {
         if (this.facade.create) {
             seneca.add(this.pin(this.name, "create"), this.handleService(
-                args => this.facade.create(args.input)
+                async args => this.facade.create(args.input)
             ));
         }
         if (this.facade.update) {
             seneca.add(this.pin(this.name, "update"), this.handleService(
-                args => this.facade.update(args.conditions, args.input)
+                async args => this.facade.update(args.conditions, args.input)
             ));
         }
         if (this.facade.remove) {
             seneca.add(this.pin(this.name, "remove"), this.handleService(
-                args => this.facade.remove(args.id)
+                async args => this.facade.remove(args.id)
             ));
         }
     }
