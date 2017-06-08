@@ -20,7 +20,7 @@ const DEFAULT_OPTIONS: DefaultConfig = {
     revision: 0,
     environment: process.env.NODE_ENV || "production",
     pin: [],
-    clientPin: "version:*,subversion:*,revision:*,role:*,environment:" + (process.env.NODE_ENV || "production"),
+    clientPin: "provider:*,version:*,subversion:*,revision:*,role:*,environment:" + (process.env.NODE_ENV || "production"),
     seneca: {
         log: "standard",
         transport: {},
@@ -135,6 +135,7 @@ export class SenecaPlum implements Microplum {
     }
 
     protected addBasicProperties(pin: any): any {
+        pin.provider = pin.provider || this.options.app;
         pin.version = pin.version || this.options.version;
         pin.subversion = pin.subversion || this.options.subversion;
         pin.revision = pin.revision || this.options.revision;
