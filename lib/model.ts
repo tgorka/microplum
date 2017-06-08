@@ -58,3 +58,63 @@ export interface Entity {
     getAct(user?: any): Function;
 
 }
+
+/**
+ * Basic entity of the facade with the _id (optional) field.
+ */
+export interface FacadeEntity {
+    _id?: string;
+}
+
+/**
+ * Facade interface for the entity manipulation (CRUD+List). All the methods form the interface are optional.
+ * All the methods are async
+ */
+export interface Facade<E extends FacadeEntity> {
+    /**
+     * Create new entity with the selected input
+     * @param input
+     * @param syncId null if needs to sync, id if it's already synced
+     * @return created entity
+     */
+    create?(input: E, syncId?: string | null): Promise<E>;
+    /**
+     * Update all the entity for selected condition with selected update
+     * @param conditions
+     * @param update
+     * @param syncId null if needs to sync, id if it's already synced
+     * @return updated entity
+     */
+    update?(conditions: { [key: string]: any }, update: { [key: string]: any }, syncId?: string | null): Promise<E>;
+    /**
+     * Find the list of the entities for selected query
+     * @param query (default all)
+     * @return list of the entity
+     */
+    find?(query?: { [key: string]: any }): Promise<E[]>;
+    /**
+     * Find first entity for selected query
+     * @param query (default all)
+     * @return fist entity or null
+     */
+    findOne?(query?: { [key: string]: any }): Promise<E | null>;
+    /**
+     * Find entity by the id
+     * @param id
+     * @return found entity or null
+     */
+    findById?(id: string): Promise<E | null>;
+    /**
+     * Remove entity by the id
+     * @param id
+     * @param syncId null if needs to sync, id if it's already synced
+     * @return removed entity or null
+     */
+    remove?(id: string, syncId?: string | null): Promise<E | null>;
+    /**
+     * Remove all the entities for selected query
+     * @param syncId null if needs to sync, id if it's already synced
+     * @param query (default all)
+     */
+    clean?(query?: { [key: string]: any }, syncId?: string | null): Promise<void>;
+}
