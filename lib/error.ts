@@ -9,6 +9,12 @@ export class ServerPlumError extends PlumError {
     }
 }
 
+export class NotAllowedPlumError extends PlumError {
+    constructor(message: string = "Method not allowed error") {
+        super(405, PlumErrorCodes.not_found, message);
+    }
+}
+
 export class NotFoundPlumError extends PlumError {
     constructor(message: string = "Entity not found error") {
         super(404, PlumErrorCodes.not_found, message);

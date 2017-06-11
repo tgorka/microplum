@@ -136,7 +136,7 @@ export class SenecaPlum implements Microplum {
     }
 
     protected addBasicProperties(pin: any): any {
-        pin.provider = pin.provider || this.options.app;
+        pin.provider = pin.provider || this.options.provider || this.options.app;
         pin.version = pin.version || this.options.version;
         pin.subversion = pin.subversion || this.options.subversion;
         pin.revision = pin.revision || this.options.revision;

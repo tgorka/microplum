@@ -12,6 +12,7 @@ export interface DefaultConfig {
 
 export interface Config extends DefaultConfig {
     app: string;
+    provider?: string;
     amqpUrl: string;
     debugUserId?: string;
 }
