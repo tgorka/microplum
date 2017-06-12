@@ -1,19 +1,21 @@
-import { Entity } from "./model";
-import { PlumError } from "./error";
+import { Entity, HasAct } from "./model";
+import { PlumError, ServerPlumError } from "./error";
 
 export abstract class ServiceEntity implements Entity {
 
-    private act: Function;
+    private act: (...args: any[]) => any;
 
-    constructor(public name: string, public facade: any, public servicePin?: any) {
+    constructor(public name: string, public facade: any & HasAct, public servicePin?: any) {
         this.act = (...args) => {
             console.log("[Microplum] '.act' not set in the service entity. Please use setAct method before.");
-            throw new Error("'.act' service not found.")
+            throw new ServerPlumError("'.act' service not found.")
         };
+        this.facade.act = this.act;
     }
 
-    public setAct(act: Function) {
+    public setAct(act: (...args: any[]) => any) {
         this.act = act;
+        this.facade.act = this.act;
     }
 
     public getAct(user?: any): Function {

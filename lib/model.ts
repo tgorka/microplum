@@ -68,10 +68,17 @@ export interface FacadeEntity {
 }
 
 /**
+ * Interface that saus the object has reference to the act method.
+ */
+export interface HasAct {
+    act: (args: any) => any;
+}
+
+/**
  * Facade interface for the entity manipulation (CRUD+List). All the methods form the interface are optional.
  * All the methods are async
  */
-export interface Facade<E extends FacadeEntity> {
+export interface RestFacade<E extends FacadeEntity> {
     /**
      * Create new entity with the selected input
      * @param input
@@ -118,4 +125,9 @@ export interface Facade<E extends FacadeEntity> {
      * @param query (default all)
      */
     clean?(query?: { [key: string]: any }, syncId?: string | null): Promise<void>;
+    /**
+     * Count the objects in the storage based on the query.
+     * @param query
+     */
+    count?(query?: { [key: string]: any }): Promise<number>;
 }
