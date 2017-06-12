@@ -71,7 +71,7 @@ export interface FacadeEntity {
  * Interface that saus the object has reference to the act method.
  */
 export interface HasAct {
-    act: (args: any) => any;
+    act: (args: any) => Promise<any>;
 }
 
 /**

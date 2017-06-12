@@ -3,22 +3,26 @@ import { PlumError, ServerPlumError } from "./error";
 
 export abstract class ServiceEntity implements Entity {
 
-    private act: (...args: any[]) => any;
+    private act: (args: any) => Promise<any>;
 
-    constructor(public name: string, public facade: any & HasAct, public servicePin?: any) {
-        this.act = (...args) => {
+    constructor(public name: string, public facade?: any & HasAct, public servicePin?: any) {
+        this.act = (args:object) => {
             console.log("[Microplum] '.act' not set in the service entity. Please use setAct method before.");
             throw new ServerPlumError("'.act' service not found.")
         };
-        this.facade.act = this.act;
+        if (this.facade) {
+            this.facade.act = this.act;
+        }
     }
 
-    public setAct(act: (...args: any[]) => any) {
+    public setAct(act: (args: any) => Promise<any>) {
         this.act = act;
-        this.facade.act = this.act;
+        if (this.facade) {
+            this.facade.act = this.act;
+        }
     }
 
-    public getAct(user?: any): Function {
+    public getAct(user?: any): (args: any) => Promise<any> {
         return (args) => {
             if (user) {
                 args.user = args.user || user;
