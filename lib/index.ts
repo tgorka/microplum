@@ -127,14 +127,14 @@ export class SenecaPlum implements Microplum {
     }
 
     public add(pin: any, cb: seneca.AddCallback): void {
-        this.addBasicProperties(pin);
-        this.addAdditionalProperties(pin);
+        pin = this.addBasicProperties(pin);
+        pin = this.addAdditionalProperties(pin);
         this.seneca.add(pin, cb);
         console.log(`[Microplum] Registered service for PIN: ${JSON.stringify(pin)}`);
     }
 
     protected addPin(pin: any): void {
-        this.addBasicProperties(pin);
+        pin = this.addBasicProperties(pin);
         pin.provider = "*";
         let realPin: string = Object.keys(pin)
             .filter(key => pin[key] !== undefined)
