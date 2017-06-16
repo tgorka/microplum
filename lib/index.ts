@@ -128,6 +128,7 @@ export class SenecaPlum implements Microplum {
         this.addBasicProperties(pin);
         pin.provider = "*";
         let realPin: string = Object.keys(pin)
+            .filter(key => !!pin[key])
             .map(key => `${key}:${pin[key]}`)
             .join(",");
 
