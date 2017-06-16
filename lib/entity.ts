@@ -33,10 +33,8 @@ export abstract class ServiceEntity implements Entity {
 
     public plugin(): Function {
         let addServices = this.addServices.bind(this);
-        let addDefaultService = this.addDefaultService.bind(this);
         return function (options) {
             addServices(this, options);
-            addDefaultService(this, options);
         }
     }
 
@@ -45,19 +43,6 @@ export abstract class ServiceEntity implements Entity {
     }
 
     protected abstract addServices(seneca: any, options: any): void;
-
-    protected addDefaultService(seneca: any, options: any): void {
-        seneca.add(this.publicPin(), this.handleService(
-            async args => {
-                console.log("[Microplum] Invalid arguments witm MSG", JSON.stringify(args));
-                return Promise.resolve({
-                    status: false,
-                    code: 404,
-                    msg: `Unknown service from ${this.publicPin()}`
-                })
-            }
-        ));
-    };
 
     protected pin(role: string, cmd: string): any {
         let pin = Object.assign({}, this.servicePin || {});
