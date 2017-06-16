@@ -29,8 +29,7 @@ const DEFAULT_OPTIONS: DefaultConfig = {
     revision: 0,
     environment: currentEnvironment(),
     pin: [],
-    clientPin: [`provider:*,version:*,subversion:*,revision:*,role:*,environment:${currentEnvironment()}`,
-        `provider:*,version:*,subversion:*,revision:*,environment:${currentEnvironment()}`],
+    clientPin: `provider:*,version:*,subversion:*,revision:*,role:*,environment:${currentEnvironment()}`,
     seneca: {
         log: "standard",
         transport: {},

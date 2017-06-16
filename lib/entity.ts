@@ -1,5 +1,5 @@
 import { Entity, HasAct } from "./model";
-import { PlumError, ServerPlumError } from "./error";
+import { NotAllowedPlumError, PlumError, ServerPlumError } from "./error";
 
 export abstract class ServiceEntity implements Entity {
 
@@ -33,8 +33,10 @@ export abstract class ServiceEntity implements Entity {
 
     public plugin(): Function {
         let addServices = this.addServices.bind(this);
+        let addDefaultService = this.addDefaultService.bind(this);
         return function (options) {
             addServices(this, options);
+            addDefaultService(this, options);
         }
     }
 
@@ -43,6 +45,18 @@ export abstract class ServiceEntity implements Entity {
     }
 
     protected abstract addServices(seneca: any, options: any): void;
+
+    protected addDefaultService(seneca: any, options: any): void {
+        seneca.add(this.pin(this.name, undefined), this.handleService(
+            async args => {
+                if (args.nonErrorDefault) {
+                    return Promise.resolve();
+                } else {
+                    throw new NotAllowedPlumError("Service not found.");
+                }
+            }
+        ));
+    }
 
     protected pin(role: string, cmd: string): any {
         let pin = Object.assign({}, this.servicePin || {});
