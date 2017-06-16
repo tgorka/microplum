@@ -6,7 +6,7 @@ export abstract class ServiceEntity implements Entity {
     private act: (args: any) => Promise<any>;
 
     constructor(public name: string, public facade?: any & HasAct, public servicePin?: any) {
-        this.act = (args:object) => {
+        this.act = (args: object) => {
             console.log("[Microplum] '.act' not set in the service entity. Please use setAct method before.");
             throw new ServerPlumError("'.act' service not found.")
         };
@@ -47,12 +47,13 @@ export abstract class ServiceEntity implements Entity {
     protected abstract addServices(seneca: any, options: any): void;
 
     protected addDefaultService(seneca: any, options: any): void {
-        seneca.add(this.pin(this.name, undefined), this.handleService(
+        let pin: any = this.publicPin();
+        seneca.add(pin, this.handleService(
             async args => {
                 if (args.nonErrorDefault) {
                     return Promise.resolve();
                 } else {
-                    throw new NotAllowedPlumError("Service not found.");
+                    throw new NotAllowedPlumError("Service not found.", { service: pin, args: args });
                 }
             }
         ));

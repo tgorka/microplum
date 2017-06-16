@@ -10,7 +10,7 @@ export class ServerPlumError extends PlumError {
 }
 
 export class NotAllowedPlumError extends PlumError {
-    constructor(message: string = "Method not allowed error") {
+    constructor(message: string = "Method not allowed error", public scope?: any) {
         super(405, PlumErrorCodes.not_found, message);
     }
 }
