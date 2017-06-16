@@ -47,7 +47,7 @@ export abstract class ServiceEntity implements Entity {
     protected abstract addServices(seneca: any, options: any): void;
 
     protected addDefaultService(seneca: any, options: any): void {
-        let pin: any = this.publicPin();
+        let pin: any = this.pin(this.name, "*");
         seneca.add(pin, this.handleService(
             async args => {
                 console.log(`WARNING: [Microplum] Method is not registered for PIN:${JSON.stringify(pin)}`);
