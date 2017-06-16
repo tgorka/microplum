@@ -6,7 +6,7 @@ export interface DefaultConfig {
     revision?: number,
     environment?: string;
     pin?: string[];
-    clientPin?: string;
+    clientPin?: string[];
     seneca?: seneca.Options;
 }
 

@@ -14,13 +14,23 @@ interface Seneca extends seneca.Instance {
     close(): void;
 }
 
+/**
+ * get current environment value
+ */
+const currentEnvironment = () => process.env.NODE_ENV || "production";
+
+/**
+ * Default options value for the microplum
+ * @type {DefaultConfig}
+ */
 const DEFAULT_OPTIONS: DefaultConfig = {
     version: 1,
     subversion: 0,
     revision: 0,
-    environment: process.env.NODE_ENV || "production",
+    environment: currentEnvironment(),
     pin: [],
-    clientPin: "provider:*,version:*,subversion:*,revision:*,role:*,environment:" + (process.env.NODE_ENV || "production"),
+    clientPin: [`provider:*,version:*,subversion:*,revision:*,role:*,environment:${currentEnvironment()}`,
+        `provider:*,version:*,subversion:*,revision:*,environment:${currentEnvironment()}`],
     seneca: {
         log: "standard",
         transport: {},
@@ -128,7 +138,7 @@ export class SenecaPlum implements Microplum {
         this.addBasicProperties(pin);
         pin.provider = "*";
         let realPin: string = Object.keys(pin)
-            .filter(key => !!pin[key])
+            .filter(key => pin[key] !== undefined)
             .map(key => `${key}:${pin[key]}`)
             .join(",");
 
