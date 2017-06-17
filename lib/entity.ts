@@ -13,7 +13,7 @@ const invalidActFun: (args: { [key: string]: any }) => Promise<any> = (args: { [
 export class PlumFacade implements HasAct {
 
     public act: (args: { [key: string]: any }) => Promise<any>;
-    public args: {};
+    public args: { [key: string]: any };
 
     constructor(act?: (args: any) => Promise<any>, args?: { [key: string]: any }) {
         this.act = (act) ? act : invalidActFun;
@@ -32,15 +32,15 @@ export abstract class ServiceEntity<F extends PlumFacade> implements Entity, Has
         this.act = invalidActFun;
         this.emptyFacade = (this.FacadeClass) ? new this.FacadeClass() : <F>new PlumFacade();
         /*if (this.facade) {
-            this.facade.act = this.act;
-        }*/
+         this.facade.act = this.act;
+         }*/
     }
 
     public setAct(act: (args: { [key: string]: any }) => Promise<any>) {
         this.act = act;
         /*if (this.facade) {
-            this.facade.act = this.act;
-        }*/
+         this.facade.act = this.act;
+         }*/
     }
 
     public getAct(user?: any): (args: { [key: string]: any }) => Promise<any> {
@@ -72,18 +72,18 @@ export abstract class ServiceEntity<F extends PlumFacade> implements Entity, Has
     protected abstract addServices(seneca: any, options: any): void;
 
     /*protected addDefaultService(seneca: any, options: any): void {
-        let pin: any = this.pin(this.name, "*");
-        seneca.add(pin, this.handleService(
-            async args => {
-                console.log(`WARNING: [Microplum] Method is not registered for PIN:${JSON.stringify(pin)}`);
-                if (args.nonErrorDefault) {
-                    return Promise.resolve();
-                } else {
-                    throw new NotAllowedPlumError("Service not found.", { service: pin, args: args });
-                }
-            }
-        ));
-    }*/
+     let pin: any = this.pin(this.name, "*");
+     seneca.add(pin, this.handleService(
+     async args => {
+     console.log(`WARNING: [Microplum] Method is not registered for PIN:${JSON.stringify(pin)}`);
+     if (args.nonErrorDefault) {
+     return Promise.resolve();
+     } else {
+     throw new NotAllowedPlumError("Service not found.", { service: pin, args: args });
+     }
+     }
+     ));
+     }*/
 
     protected pin(role: string, cmd: string, additionalArgs: {} = {}): any {
         let pin = Object.assign({}, this.servicePin || {}, additionalArgs);
