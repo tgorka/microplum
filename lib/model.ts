@@ -95,6 +95,14 @@ export interface RestFacade<E extends FacadeEntity> {
      */
     update?(conditions: { [key: string]: any }, update: { [key: string]: any }, syncId?: string | null): Promise<E>;
     /**
+     * Update all the entity for selected condition with selected update
+     * @param id
+     * @param update
+     * @param syncId null if needs to sync, id if it's already synced
+     * @return updated entity
+     */
+    updateById?(id: string, update: { [key: string]: any }, syncId?: string | null): Promise<E>;
+    /**
      * Find the list of the entities for selected query
      * @param query (default all)
      * @return list of the entity
@@ -114,17 +122,24 @@ export interface RestFacade<E extends FacadeEntity> {
     findById?(id: string): Promise<E | null>;
     /**
      * Remove entity by the id
+     * @param query
+     * @param syncId null if needs to sync, id if it's already synced
+     * @return removed entity or null
+     */
+    remove?(query?: { [key: string]: any }): Promise<E | null>;
+    /**
+     * Remove entity by the id
      * @param id
      * @param syncId null if needs to sync, id if it's already synced
      * @return removed entity or null
      */
-    remove?(id: string, syncId?: string | null): Promise<E | null>;
+    removeById?(id: string): Promise<E | null>;
     /**
      * Remove all the entities for selected query
      * @param syncId null if needs to sync, id if it's already synced
      * @param query (default all)
      */
-    clean?(query?: { [key: string]: any }, syncId?: string | null): Promise<void>;
+    clean?(query?: { [key: string]: any }): Promise<void>;
     /**
      * Count the objects in the storage based on the query.
      * @param query

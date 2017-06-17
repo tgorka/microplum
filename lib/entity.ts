@@ -1,28 +1,49 @@
-import { Entity, HasAct } from "./model";
-import { NotAllowedPlumError, PlumError, ServerPlumError } from "./error";
+import { Entity, HasAct, RestFacade } from "./model";
+import { PlumError, ServerPlumError } from "./error";
 
-export abstract class ServiceEntity implements Entity {
 
-    private act: (args: any) => Promise<any>;
+const invalidActFun: (args: { [key: string]: any }) => Promise<any> = (args: { [key: string]: any }): Promise<any> => {
+    console.log("[Microplum] '.act' not set in the service entity. Please use setAct method before.");
+    throw new ServerPlumError("'act' service not set.");
+};
 
-    constructor(public name: string, public facade?: any & HasAct, public servicePin?: any) {
-        this.act = (args: object) => {
-            console.log("[Microplum] '.act' not set in the service entity. Please use setAct method before.");
-            throw new ServerPlumError("'.act' service not found.")
-        };
-        if (this.facade) {
+/**
+ * Facade class that can be extended with specific methods.
+ */
+export class PlumFacade implements HasAct {
+
+    public act: (args: { [key: string]: any }) => Promise<any>;
+    public args: {};
+
+    constructor(act?: (args: any) => Promise<any>, args?: { [key: string]: any }) {
+        this.act = (act) ? act : invalidActFun;
+        this.args = (args) ? args : {};
+    }
+}
+
+export abstract class ServiceEntity<F extends PlumFacade> implements Entity, HasAct {
+
+    public act: (args: { [key: string]: any }) => Promise<any>;
+    protected emptyFacade: F;
+
+    constructor(public name: string,
+                public FacadeClass?: new (act?: (args: any) => Promise<any>, args?: { [key: string]: any }) => F,
+                public servicePin?: any) {
+        this.act = invalidActFun;
+        this.emptyFacade = (this.FacadeClass) ? new this.FacadeClass() : <F>new PlumFacade();
+        /*if (this.facade) {
             this.facade.act = this.act;
-        }
+        }*/
     }
 
-    public setAct(act: (args: any) => Promise<any>) {
+    public setAct(act: (args: { [key: string]: any }) => Promise<any>) {
         this.act = act;
-        if (this.facade) {
+        /*if (this.facade) {
             this.facade.act = this.act;
-        }
+        }*/
     }
 
-    public getAct(user?: any): (args: any) => Promise<any> {
+    public getAct(user?: any): (args: { [key: string]: any }) => Promise<any> {
         return (args) => {
             if (user) {
                 args.user = args.user || user;
@@ -31,12 +52,16 @@ export abstract class ServiceEntity implements Entity {
         };
     }
 
+    public createFacade(args: { [key: string]: any } = {}): F {
+        return new this.FacadeClass(this.act, args);
+    }
+
     public plugin(): Function {
         let addServices = this.addServices.bind(this);
-        let addDefaultService = this.addDefaultService.bind(this);
+        //let addDefaultService = this.addDefaultService.bind(this);
         return function (options) {
             addServices(this, options);
-            addDefaultService(this, options);
+            //addDefaultService(this, options);
         }
     }
 
@@ -46,7 +71,7 @@ export abstract class ServiceEntity implements Entity {
 
     protected abstract addServices(seneca: any, options: any): void;
 
-    protected addDefaultService(seneca: any, options: any): void {
+    /*protected addDefaultService(seneca: any, options: any): void {
         let pin: any = this.pin(this.name, "*");
         seneca.add(pin, this.handleService(
             async args => {
@@ -58,10 +83,10 @@ export abstract class ServiceEntity implements Entity {
                 }
             }
         ));
-    }
+    }*/
 
-    protected pin(role: string, cmd: string): any {
-        let pin = Object.assign({}, this.servicePin || {});
+    protected pin(role: string, cmd: string, additionalArgs: {} = {}): any {
+        let pin = Object.assign({}, this.servicePin || {}, additionalArgs);
         pin.role = role;
         pin.cmd = cmd;
         return pin;
@@ -99,7 +124,7 @@ export abstract class ServiceEntity implements Entity {
 /**
  * CRUD for the entity
  */
-export class RestEntity extends ServiceEntity {
+export class RestEntity extends ServiceEntity<RestFacade<any> & PlumFacade> {
     protected addServices(seneca: any, options: any): void {
         this.addGetServices(seneca);
         this.addStatisticalServices(seneca);
@@ -107,45 +132,60 @@ export class RestEntity extends ServiceEntity {
     }
 
     protected addGetServices(seneca: any): void {
-        if (this.facade.find) {
-            seneca.add(this.pin(this.name, "find"), this.handleService(
-                async args => this.facade.find(args.conditions)
+        if (this.emptyFacade.find) {
+            seneca.add(this.pin(this.name, "find", { conditions: "*" }), this.handleService(
+                async args => this.createFacade(args).find(args.conditions)
             ));
         }
-        if (this.facade.findOne) {
-            seneca.add(this.pin(this.name, "findOne"), this.handleService(
-                async args => this.facade.findOne(args.conditions)
+        if (this.emptyFacade.findOne) {
+            seneca.add(this.pin(this.name, "findOne", { conditions: "*" }), this.handleService(
+                async args => this.createFacade(args).findOne(args.conditions)
             ));
         }
-        if (this.facade.findById) {
-            seneca.add(this.pin(this.name, "findById"), this.handleService(
-                async args => this.facade.findById(args.id)
+        if (this.emptyFacade.findById) {
+            seneca.add(this.pin(this.name, "find", { id: "*" }), this.handleService(
+                async args => this.createFacade(args).findById(args.id)
             ));
         }
     }
 
     protected addStatisticalServices(seneca: any): void {
-        if (this.facade.count) {
-            seneca.add(this.pin(this.name, "count"), this.handleService(
-                async args => this.facade.count(args.conditions)
+        if (this.emptyFacade.count) {
+            seneca.add(this.pin(this.name, "count", { conditions: "*" }), this.handleService(
+                async args => this.createFacade(args).count(args.conditions)
             ));
         }
     }
 
     protected addModifyServices(seneca: any): void {
-        if (this.facade.create) {
-            seneca.add(this.pin(this.name, "create"), this.handleService(
-                async args => this.facade.create(args.input)
+        if (this.emptyFacade.create) {
+            seneca.add(this.pin(this.name, "create", { input: "*" }), this.handleService(
+                async args => this.createFacade(args).create(args.input)
             ));
         }
-        if (this.facade.update) {
-            seneca.add(this.pin(this.name, "update"), this.handleService(
-                async args => this.facade.update(args.conditions, args.input)
+        if (this.emptyFacade.update) {
+            seneca.add(this.pin(this.name, "update", { conditions: "*", input: "*" }), this.handleService(
+                async args => this.createFacade(args).update(args.conditions, args.input)
             ));
         }
-        if (this.facade.remove) {
-            seneca.add(this.pin(this.name, "remove"), this.handleService(
-                async args => this.facade.remove(args.id)
+        if (this.emptyFacade.updateById) {
+            seneca.add(this.pin(this.name, "update", { id: "*", input: "*" }), this.handleService(
+                async args => this.createFacade(args).updateById(args.id, args.input)
+            ));
+        }
+        if (this.emptyFacade.remove) {
+            seneca.add(this.pin(this.name, "remove", { conditions: "*" }), this.handleService(
+                async args => this.createFacade(args).remove(args.conditions)
+            ));
+        }
+        if (this.emptyFacade.removeById) {
+            seneca.add(this.pin(this.name, "remove", { id: "*" }), this.handleService(
+                async args => this.createFacade(args).removeById(args.id)
+            ));
+        }
+        if (this.emptyFacade.clean) {
+            seneca.add(this.pin(this.name, "clean"), this.handleService(
+                async args => this.createFacade(args).clean()
             ));
         }
     }
