@@ -158,8 +158,13 @@ export class RestEntity extends ServiceEntity<RestFacade<any> & PlumFacade> {
             ));
         }
         if (this.emptyFacade.update) {
-            seneca.add(this.pin(this.name, "update", { conditions: "*", input: "*" }), this.handleService(
+            seneca.add(this.pin(this.name, "updateAll", { conditions: "*", input: "*" }), this.handleService(
                 async args => this.createFacade(args).update(args.conditions, args.input)
+            ));
+        }
+        if (this.emptyFacade.updateOne) {
+            seneca.add(this.pin(this.name, "update", { conditions: "*", input: "*" }), this.handleService(
+                async args => this.createFacade(args).updateOne(args.conditions, args.input)
             ));
         }
         if (this.emptyFacade.updateById) {
@@ -168,8 +173,13 @@ export class RestEntity extends ServiceEntity<RestFacade<any> & PlumFacade> {
             ));
         }
         if (this.emptyFacade.remove) {
-            seneca.add(this.pin(this.name, "remove", { conditions: "*" }), this.handleService(
+            seneca.add(this.pin(this.name, "removeAll", { conditions: "*" }), this.handleService(
                 async args => this.createFacade(args).remove(args.conditions)
+            ));
+        }
+        if (this.emptyFacade.removeOne) {
+            seneca.add(this.pin(this.name, "remove", { conditions: "*" }), this.handleService(
+                async args => this.createFacade(args).removeOne(args.conditions)
             ));
         }
         if (this.emptyFacade.removeById) {
