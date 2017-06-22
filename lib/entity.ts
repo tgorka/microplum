@@ -67,16 +67,14 @@ export abstract class ServiceEntity<F extends PlumFacade> implements Entity, Has
 
     protected addDefaultService(seneca: any, options: any): void {
         let pin: any = this.pin(this.name, "*");
-        seneca.add(pin, this.handleService(
-            async args => {
-                console.log(`WARNING: [Microplum] Method is not registered for PIN:${JSON.stringify(pin)}`);
-                if (args.nonErrorDefault) {
-                    return Promise.resolve();
-                } else {
-                    throw new NotAllowedPlumError("Service not found.", { service: pin, args: args });
-                }
+        seneca.add(pin, async args => {
+            console.log(`WARNING: [Microplum] Method is not registered for PIN:${JSON.stringify(pin)}`);
+            if (args.nonErrorDefault) {
+                return Promise.resolve();
+            } else {
+                throw new NotAllowedPlumError("Service not found.", { service: pin, args: args });
             }
-        ));
+        });
     }
 
     protected pin(role: string, cmd: string, additionalArgs: {} = {}): any {
@@ -84,10 +82,6 @@ export abstract class ServiceEntity<F extends PlumFacade> implements Entity, Has
         pin.role = role;
         pin.cmd = cmd;
         return pin;
-    }
-
-    protected handleService(cb: Function): Function {
-        return cb;
     }
 
 }
@@ -104,70 +98,58 @@ export class RestEntity extends ServiceEntity<RestFacade<any>> {
 
     protected addGetServices(seneca: any): void {
         if (this.emptyFacade.find) {
-            seneca.add(this.pin(this.name, "find", { conditions: "*" }), this.handleService(
-                async args => this.createFacade(args).find(args.conditions)
-            ));
+            seneca.add(this.pin(this.name, "find", { conditions: "*" }),
+                async args => this.createFacade(args).find(args.conditions));
         }
         if (this.emptyFacade.findOne) {
-            seneca.add(this.pin(this.name, "findOne", { conditions: "*" }), this.handleService(
-                async args => this.createFacade(args).findOne(args.conditions)
-            ));
+            seneca.add(this.pin(this.name, "findOne", { conditions: "*" }),
+                async args => this.createFacade(args).findOne(args.conditions));
         }
         if (this.emptyFacade.findById) {
-            seneca.add(this.pin(this.name, "find", { id: "*" }), this.handleService(
-                async args => this.createFacade(args).findById(args.id)
-            ));
+            seneca.add(this.pin(this.name, "find", { id: "*" }),
+                async args => this.createFacade(args).findById(args.id));
         }
     }
 
     protected addStatisticalServices(seneca: any): void {
         if (this.emptyFacade.count) {
-            seneca.add(this.pin(this.name, "count", { conditions: "*" }), this.handleService(
-                async args => this.createFacade(args).count(args.conditions)
-            ));
+            seneca.add(this.pin(this.name, "count", { conditions: "*" }),
+                async args => this.createFacade(args).count(args.conditions));
         }
     }
 
     protected addModifyServices(seneca: any): void {
         if (this.emptyFacade.create) {
-            seneca.add(this.pin(this.name, "create", { input: "*" }), this.handleService(
-                async args => this.createFacade(args).create(args.input)
-            ));
+            seneca.add(this.pin(this.name, "create", { input: "*" }),
+                async args => this.createFacade(args).create(args.input));
         }
         if (this.emptyFacade.update) {
-            seneca.add(this.pin(this.name, "updateAll", { conditions: "*", input: "*" }), this.handleService(
-                async args => this.createFacade(args).update(args.conditions, args.input)
-            ));
+            seneca.add(this.pin(this.name, "updateAll", { conditions: "*", input: "*" }),
+                async args => this.createFacade(args).update(args.conditions, args.input));
         }
         if (this.emptyFacade.updateOne) {
-            seneca.add(this.pin(this.name, "update", { conditions: "*", input: "*" }), this.handleService(
-                async args => this.createFacade(args).updateOne(args.conditions, args.input)
-            ));
+            seneca.add(this.pin(this.name, "update", { conditions: "*", input: "*" }),
+                async args => this.createFacade(args).updateOne(args.conditions, args.input));
         }
         if (this.emptyFacade.updateById) {
-            seneca.add(this.pin(this.name, "update", { id: "*", input: "*" }), this.handleService(
-                async args => this.createFacade(args).updateById(args.id, args.input)
-            ));
+            seneca.add(this.pin(this.name, "update", { id: "*", input: "*" }),
+                async args => this.createFacade(args).updateById(args.id, args.input));
         }
         if (this.emptyFacade.remove) {
-            seneca.add(this.pin(this.name, "removeAll", { conditions: "*" }), this.handleService(
-                async args => this.createFacade(args).remove(args.conditions)
-            ));
+            seneca.add(this.pin(this.name, "removeAll", { conditions: "*" }),
+                async args => this.createFacade(args).remove(args.conditions));
         }
         if (this.emptyFacade.removeOne) {
-            seneca.add(this.pin(this.name, "remove", { conditions: "*" }), this.handleService(
-                async args => this.createFacade(args).removeOne(args.conditions)
-            ));
+            seneca.add(this.pin(this.name, "remove", { conditions: "*" }),
+                async args => this.createFacade(args).removeOne(args.conditions));
         }
         if (this.emptyFacade.removeById) {
-            seneca.add(this.pin(this.name, "remove", { id: "*" }), this.handleService(
-                async args => this.createFacade(args).removeById(args.id)
-            ));
+            seneca.add(this.pin(this.name, "remove", { id: "*" }),
+                async args => this.createFacade(args).removeById(args.id));
         }
         if (this.emptyFacade.clean) {
-            seneca.add(this.pin(this.name, "clean"), this.handleService(
-                async args => this.createFacade(args).clean()
-            ));
+            seneca.add(this.pin(this.name, "clean"),
+                async args => this.createFacade(args).clean());
         }
     }
 }
