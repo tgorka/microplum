@@ -87,7 +87,8 @@ export abstract class ServiceEntity<F extends PlumFacade> implements Entity, Has
     }
 
     protected handleService(cb: Function): Function {
-        let escapeDoc = this.escapeDoc.bind(this);
+        return cb;
+        /*let escapeDoc = this.escapeDoc.bind(this);
         return function (args, done) {
             cb(args)
                 .then(doc => done(null, { status: true, data: escapeDoc(doc) }))
@@ -98,10 +99,10 @@ export abstract class ServiceEntity<F extends PlumFacade> implements Entity, Has
                         done(err);
                     }
                 });
-        };
+        };*/
     }
 
-    private escapeDoc(doc: any): any {
+    /*private escapeDoc(doc: any): any {
         if (Array.isArray(doc)) {
             return doc.map(docElement => this.escapeDoc(docElement));
         } else if (doc && doc.toObject) {
@@ -111,14 +112,14 @@ export abstract class ServiceEntity<F extends PlumFacade> implements Entity, Has
         } else {
             return null;
         }
-    }
+    }*/
 
 }
 
 /**
  * CRUD for the entity
  */
-export class RestEntity extends ServiceEntity<RestFacade<any> & PlumFacade> {
+export class RestEntity extends ServiceEntity<RestFacade<any>> {
     protected addServices(seneca: any, options: any): void {
         this.addGetServices(seneca);
         this.addStatisticalServices(seneca);

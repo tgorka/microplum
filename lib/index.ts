@@ -3,6 +3,7 @@ import { Config, DefaultConfig, Entity, Microplum } from "./model";
 import * as _ from "lodash";
 import * as seneca from "seneca";
 import * as senecaAmqpTransport from "seneca-amqp-transport";
+import { PlumError, ServerPlumError } from "./error";
 
 /**
  * Seneca interface for updating with non specified seneca methods
@@ -89,7 +90,8 @@ export class SenecaPlum implements Microplum {
         if (user && user.name) {
             pin.userName = user.name;
         }
-        //pin.fatal$ = false; // all errors are not fatal errors //TODO: check it on production
+        pin.fatal$ = false; // all errors are not fatal errors //TODO: check it on production
+        //pin.timeout$ = 2000; // override global timeout
         return new Promise((resolve, reject) => {
             this.act(pin, (err, data) => {
                 if (err) {
@@ -129,8 +131,34 @@ export class SenecaPlum implements Microplum {
     public add(pin: any, cb: seneca.AddCallback): void {
         pin = this.addBasicProperties(pin);
         pin = this.addAdditionalProperties(pin);
-        this.seneca.add(pin, cb);
+        this.seneca.add(pin, this.encloseCallback(cb));
         console.log(`[Microplum] Registered service for PIN: ${JSON.stringify(pin)}`);
+    }
+
+    private escapeDoc(doc: any): any {
+        if (Array.isArray(doc)) {
+            return doc.map(docElement => this.escapeDoc(docElement));
+        } else if (doc && doc.toObject) {
+            return doc.toObject();
+        } else if (doc) {
+            return doc;
+        } else {
+            return null;
+        }
+    }
+
+    protected encloseCallback(cb: Function): seneca.AddCallback {
+        return <seneca.AddCallback>((pin, done) => {
+            try {
+                done(null, { status: true, data: this.escapeDoc(cb(pin, done)) });
+            } catch (err) {
+                if (err instanceof PlumError) {
+                    done(null, { status: false, error: err });
+                } else {
+                    done(null, { status: false, error: new ServerPlumError(err.message) });
+                }
+            }
+        });
     }
 
     protected addPin(pin: any): void {
