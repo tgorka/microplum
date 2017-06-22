@@ -1,4 +1,5 @@
 import * as seneca from "seneca";
+import { PlumFacade } from "./entity";
 
 export interface DefaultConfig {
     version?: number;
@@ -78,7 +79,7 @@ export interface HasAct {
  * Facade interface for the entity manipulation (CRUD+List). All the methods form the interface are optional.
  * All the methods are async
  */
-export interface RestFacade<E extends FacadeEntity> {
+export interface RestFacade<E extends FacadeEntity> extends PlumFacade {
     /**
      * Create new entity with the selected input
      * @param input

@@ -88,31 +88,7 @@ export abstract class ServiceEntity<F extends PlumFacade> implements Entity, Has
 
     protected handleService(cb: Function): Function {
         return cb;
-        /*let escapeDoc = this.escapeDoc.bind(this);
-        return function (args, done) {
-            cb(args)
-                .then(doc => done(null, { status: true, data: escapeDoc(doc) }))
-                .catch(err => {
-                    if (err instanceof PlumError) {
-                        done(null, { status: false, error: err });
-                    } else {
-                        done(err);
-                    }
-                });
-        };*/
     }
-
-    /*private escapeDoc(doc: any): any {
-        if (Array.isArray(doc)) {
-            return doc.map(docElement => this.escapeDoc(docElement));
-        } else if (doc && doc.toObject) {
-            return doc.toObject();
-        } else if (doc) {
-            return doc;
-        } else {
-            return null;
-        }
-    }*/
 
 }
 
