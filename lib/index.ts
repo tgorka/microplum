@@ -3,7 +3,7 @@ import { Config, DefaultConfig, Entity, Microplum } from "./model";
 import * as _ from "lodash";
 import * as seneca from "seneca";
 import * as senecaAmqpTransport from "seneca-amqp-transport";
-import { PlumError, ServerPlumError, TimeoutPlumError } from "./error";
+import { PlumError, ServerPlumError, TimeoutPlumError, transformSenecaError } from "./error";
 
 /**
  * Seneca interface for updating with non specified seneca methods
@@ -94,18 +94,10 @@ export class SenecaPlum implements Microplum {
         //pin["default$"] = pin["default$"] || {test:"test value"}; // default value when not found the pin
         //pin["timeout$"] = 2000; // override global timeout
         return new Promise((resolve, reject) => {
-            // set timeout to invalidate request
-            /*let timeout = setTimeout(() => {
-                clearTimeout(timeout);
-                console.error(`[Microplum] TIMEOUT <= ${JSON.stringify(pin)}`);
-                reject(new TimeoutPlumError("Internal timeout during aceessing the service"));
-            }, this.options.seneca.timeout / 10);*/
-
             this.act(pin, (err, data) => {
-                //clearTimeout(timeout);
                 if (err) {
                     console.error(`[Microplum] <= ${JSON.stringify(pin)}`, err);
-                    return reject(new ServerPlumError(JSON.stringify(err)));
+                    return reject(transformSenecaError(err));
                 } else {
                     console.log(`[Microplum] ANSWER [status:${(data) ? data.status : ''}] <= ${JSON.stringify(pin)}`);
                     if (data && typeof data.status === "boolean") {
