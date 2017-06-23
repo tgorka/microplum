@@ -100,7 +100,7 @@ export class SenecaPlum implements Microplum {
                     console.error(err);
                     return reject(err);
                 } else {
-                    console.log(`[Microplum] ANSWER <= ${JSON.stringify(pin)}`);
+                    console.log(`[Microplum] ANSWER [status:${(data) ? data.status : ''}] <= ${JSON.stringify(pin)}`);
                     if (data && typeof data.status === "boolean") {
                         if (data.status) {
                             return resolve(data.data);
@@ -110,6 +110,7 @@ export class SenecaPlum implements Microplum {
                             return reject(data);
                         }
                     } else {
+                        console.log("[Microplum] ANSWER unknown type: resolving data");
                         return resolve(data);
                     }
                 }
@@ -149,9 +150,10 @@ export class SenecaPlum implements Microplum {
     }
 
     protected encloseCallback(cb: Function): seneca.AddCallback {
-        return <seneca.AddCallback>((pin, done) => {
+        return <seneca.AddCallback>(async (pin, done): Promise<void> => {
             try {
-                done(null, { status: true, data: this.escapeDoc(cb(pin, done)) });
+                let doc: any = await cb(pin, done);
+                done(null, { status: true, data: this.escapeDoc(doc) });
             } catch (err) {
                 if (err instanceof PlumError) {
                     done(null, { status: false, error: err });
