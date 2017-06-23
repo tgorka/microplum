@@ -95,18 +95,17 @@ export class SenecaPlum implements Microplum {
         //pin["timeout$"] = 2000; // override global timeout
         return new Promise((resolve, reject) => {
             // set timeout to invalidate request
-            let timeout = setTimeout(() => {
+            /*let timeout = setTimeout(() => {
                 clearTimeout(timeout);
-                this.seneca.close(); // close the connection
+                console.error(`[Microplum] TIMEOUT <= ${JSON.stringify(pin)}`);
                 reject(new TimeoutPlumError("Internal timeout during aceessing the service"));
-            }, this.options.seneca.timeout - 100);
+            }, this.options.seneca.timeout / 10);*/
 
             this.act(pin, (err, data) => {
-                clearTimeout(timeout);
+                //clearTimeout(timeout);
                 if (err) {
-                    console.log(`[Microplum] ERR <= ${JSON.stringify(pin)}`);
-                    console.error(err);
-                    return reject(err);
+                    console.error(`[Microplum] <= ${JSON.stringify(pin)}`, err);
+                    return reject(new ServerPlumError(JSON.stringify(err)));
                 } else {
                     console.log(`[Microplum] ANSWER [status:${(data) ? data.status : ''}] <= ${JSON.stringify(pin)}`);
                     if (data && typeof data.status === "boolean") {
