@@ -63,13 +63,16 @@ export class ServerPlumError extends PlumError {
 }
 
 export const transformSenecaError = (err: any): PlumError | any => {
-    if (err.seneca && err.details && err.details.message) {
+    if (err instanceof  PlumError) {
+        return err;
+    } else if (err.seneca && err.details && err.details.message) {
         switch (err.details.message) {
             case "[TIMEOUT]":
                 return new TimeoutPlumError(err.msg);
         }
+    } else {
+        return new ServerPlumError(err.message);
     }
-    return err;
 };
 
 /** Utility function to create a K:V from a list of strings */
