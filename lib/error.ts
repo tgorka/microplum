@@ -3,27 +3,9 @@ export class PlumError {
     };
 }
 
-export class ServerPlumError extends PlumError {
-    constructor(message: string = "Unexpected server error") {
-        super(500, PlumErrorCodes.server_error, message);
-    }
-}
-
-export class NotAllowedPlumError extends PlumError {
-    constructor(message: string = "Method not allowed error", public scope?: any) {
-        super(405, PlumErrorCodes.not_found, message);
-    }
-}
-
-export class NotFoundPlumError extends PlumError {
-    constructor(message: string = "Entity not found error") {
-        super(404, PlumErrorCodes.not_found, message);
-    }
-}
-
-export class ForbiddenPlumError extends PlumError {
-    constructor(message: string = "Access forbidden") {
-        super(403, PlumErrorCodes.forbidden, message);
+export class ParametersPlumError extends PlumError {
+    constructor(message: string) {
+        super(400, PlumErrorCodes.parameters_error, message);
     }
 }
 
@@ -33,9 +15,33 @@ export class UnauthorizedPlumError extends PlumError {
     }
 }
 
-export class ParametersPlumError extends PlumError {
-    constructor(message: string) {
-        super(400, PlumErrorCodes.parameters_error, message);
+export class ForbiddenPlumError extends PlumError {
+    constructor(message: string = "Access forbidden") {
+        super(403, PlumErrorCodes.forbidden, message);
+    }
+}
+
+export class NotFoundPlumError extends PlumError {
+    constructor(message: string = "Entity not found error") {
+        super(404, PlumErrorCodes.not_found, message);
+    }
+}
+
+export class NotAllowedPlumError extends PlumError {
+    constructor(message: string = "Method not allowed error", public scope?: any) {
+        super(405, PlumErrorCodes.not_allowed, message);
+    }
+}
+
+export class TimeoutPlumError extends PlumError {
+    constructor(message: string = "Method timeout error", public scope?: any) {
+        super(408, PlumErrorCodes.timeout, message);
+    }
+}
+
+export class PreconditionFailedPlumError extends PlumError {
+    constructor(message: string = null) {
+        super(412, PlumErrorCodes.predondition_error, message);
     }
 }
 
@@ -50,9 +56,9 @@ export class ValidationPlumError extends PlumError {
     }
 }
 
-export class PreconditionFailedPlumError extends PlumError {
-    constructor(message: string = null) {
-        super(412, PlumErrorCodes.predondition_error, message);
+export class ServerPlumError extends PlumError {
+    constructor(message: string = "Unexpected server error") {
+        super(500, PlumErrorCodes.server_error, message);
     }
 }
 
@@ -68,7 +74,9 @@ function strEnum<T extends string>(o: Array<T>): {[K in T]: K} {
 export const PlumErrorCodes = strEnum([
     "server_error",
     "not_found",
+    "not_allowed",
     "forbidden",
+    "timeout",
     "unauthorized",
     "parameters_error",
     "validation_error",
