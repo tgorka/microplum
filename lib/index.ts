@@ -154,11 +154,8 @@ export class SenecaPlum implements Microplum {
                 let doc: any = await cb(pin, done);
                 done(null, { status: true, data: this.escapeDoc(doc) });
             } catch (err) {
-                if (err instanceof PlumError) {
-                    done(null, { status: false, error: err });
-                } else {
-                    done(null, { status: false, error: new ServerPlumError(err.message) });
-                }
+                done(err);
+                throw err;
             }
         });
     }
