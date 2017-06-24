@@ -69,6 +69,14 @@ export interface FacadeEntity {
 }
 
 /**
+ * Entity that are able to sync with another systems - has field for links and sync table
+ */
+export interface SyncEntity {
+    _sync: string;
+    _link: string;
+}
+
+/**
  * Interface that saus the object has reference to the act method.
  */
 export interface HasAct {
