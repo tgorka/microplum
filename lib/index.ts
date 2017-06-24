@@ -149,10 +149,9 @@ export class SenecaPlum implements Microplum {
     }
 
     protected encloseCallback(cb: Function): seneca.AddCallback {
-        return <seneca.AddCallback>(async (pin, done): Promise<void> => {
+        return <seneca.AddCallback>((pin: any, done: Function): void => {
             try {
-                let doc: any = await cb(pin, done);
-                done(null, { status: true, data: this.escapeDoc(doc) });
+                cb(pin, (err: any, result: any): void => done(null, this.escapeDoc(result)));
             } catch (err) {
                 done(err);
                 throw err;
