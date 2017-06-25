@@ -90,11 +90,8 @@ export class SenecaPlum implements Microplum {
         if (user && user.name) {
             pin.userName = user.name;
         }
-        //pin["fatal$"] = pin["fatal$"] || false; // all errors are not fatal errors
-        //pin["default$"] = pin["default$"] || {test:"test value"}; // default value when not found the pin
-        //pin["timeout$"] = 2000; // override global timeout
         return new Promise((resolve, reject) => {
-            this.act(pin, (err, data) => {
+            this.act(pin, (err: any|null, data: any): void => {
                 if (err) {
                     console.error(`[Microplum] <= ${JSON.stringify(pin)}`, err);
                     return reject(transformSenecaError(err));
@@ -129,7 +126,7 @@ export class SenecaPlum implements Microplum {
         }
     }
 
-    public add(pin: any, cb: seneca.AddCallback): void {
+    public add(pin: any, cb: (args: any) => Promise<any|void>): void {
         pin = this.addBasicProperties(pin);
         pin = this.addAdditionalProperties(pin);
         this.seneca.add(pin, this.encloseCallback(cb));
@@ -148,10 +145,11 @@ export class SenecaPlum implements Microplum {
         }
     }
 
-    protected encloseCallback(cb: Function): seneca.AddCallback {
-        return <seneca.AddCallback>((pin: any, done: Function): void => {
+    protected encloseCallback(cb: (args: any) => Promise<any|void>): seneca.AddCallback {
+        return <seneca.AddCallback>(async (pin: any, done: seneca.ActCallback): Promise<void> => {
             try {
-                cb(pin, (err: any, result: any): void => done(null, this.escapeDoc(result)));
+                done(null, this.escapeDoc(await cb(pin)));
+                //cb(pin, (err: any, result: any): void => done(null, this.escapeDoc(result)));
             } catch (err) {
                 done(err);
                 throw err;
