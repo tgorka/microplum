@@ -91,7 +91,7 @@ export class SenecaPlum implements Microplum {
             pin.userName = user.name;
         }
         return new Promise((resolve, reject) => {
-            this.act(pin, (err: any|null, data: any): void => {
+            this.act(pin, (err: any | null, data: any): void => {
                 if (err) {
                     console.error(`[Microplum] <= ${JSON.stringify(pin)}`, err);
                     return reject(transformSenecaError(err));
@@ -126,7 +126,7 @@ export class SenecaPlum implements Microplum {
         }
     }
 
-    public add(pin: any, cb: (args: any) => Promise<any|void>): void {
+    public add(pin: any, cb: (args: any) => Promise<any | void>): void {
         pin = this.addBasicProperties(pin);
         pin = this.addAdditionalProperties(pin);
         this.seneca.add(pin, this.encloseCallback(cb));
@@ -145,13 +145,13 @@ export class SenecaPlum implements Microplum {
         }
     }
 
-    protected encloseCallback(cb: (args: any) => Promise<any|void>): seneca.AddCallback {
+    protected encloseCallback(cb: (args: any) => Promise<any | void>): seneca.AddCallback {
         return <seneca.AddCallback>(async (pin: any, done: seneca.ActCallback): Promise<void> => {
             try {
-                done(null, this.escapeDoc(await cb(pin)));
+                done(null, { status: true, data: this.escapeDoc(await cb(pin)) });
                 //cb(pin, (err: any, result: any): void => done(null, this.escapeDoc(result)));
             } catch (err) {
-                done(err);
+                done(null, { status: false, error: transformSenecaError(err) });
                 throw err;
             }
         });
