@@ -151,8 +151,13 @@ export class SenecaPlum implements Microplum {
                 done(null, { status: true, data: this.escapeDoc(await cb(pin)) });
                 //cb(pin, (err: any, result: any): void => done(null, this.escapeDoc(result)));
             } catch (err) {
-                done(null, { status: false, error: transformSenecaError(err) });
-                throw err;
+                let transformedError = transformSenecaError(err);
+                done(null, { status: false, error: transformedError });
+                if (transformedError instanceof TimeoutPlumError) {
+                    throw transformedError;
+                } else {
+                    throw err;
+                }
             }
         });
     }
