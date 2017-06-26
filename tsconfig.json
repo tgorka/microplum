@@ -7,12 +7,12 @@
   ],
   "compilerOptions": {
     "noImplicitAny": false,
-    "target": "ES5",
+    "target": "ES2016",
     "types": [
       "node"
     ],
     "lib": [
-      "ES2015"
+      "ES2016"
     ],
     "module": "commonjs",
     "sourceMap": true,
