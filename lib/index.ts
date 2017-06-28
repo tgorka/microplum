@@ -92,7 +92,8 @@ export class SenecaPlum implements Microplum {
             pin.userName = user.name;
         }
         // check if the pin exists
-        if (!this.seneca["has"](pin)) {
+        console.log(`INFO for the services: pin:[${pin}] has:[${this.seneca["has"](pin)}] list:[${this.seneca["list"](pin)}] find:[${this.seneca["find"](pin)}]`)
+        if (!this.seneca["find"](pin)) {
             console.log(`WARNING: [Microplum] Method is not found for PIN:${JSON.stringify(pin)}`);
             if (pin.nonErrorDefault) {
                 return Promise.resolve();
