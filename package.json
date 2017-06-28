@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "Library that provide persistence layer of communication between microservices.",
   "main": "index.js",
+  "engines": {
+    "node": ">=8"
+  },
   "scripts": {
     "start": "node ./node_modules/.bin/gulp",
     "build": "node ./node_modules/.bin/gulp build",

@@ -3,7 +3,7 @@ import { Config, DefaultConfig, Entity, Microplum } from "./model";
 import * as _ from "lodash";
 import * as seneca from "seneca";
 import * as senecaAmqpTransport from "seneca-amqp-transport";
-import { NotAllowedPlumError, PlumError, ServerPlumError, TimeoutPlumError, transformSenecaError } from "./error";
+import { NotAllowedPlumError, transformSenecaError } from "./error";
 
 /**
  * Seneca interface for updating with non specified seneca methods
@@ -81,14 +81,7 @@ export class SenecaPlum implements Microplum {
 
     public actPromise(pin: any, user?: any): Promise<any> {
         console.log(`[Microplum] CALL => ${JSON.stringify(pin)}`);
-        /*if (!pin.role || typeof pin.role !== "string") {
-            throw new NotAllowedPlumError(`[act] there is no service with no string 'role' parameter: ` +
-                `<= ${JSON.stringify(pin)}`);
-        } else if (!this.options.roles.includes(pin.role)) {
-            throw new NotAllowedPlumError(`[act] the role is not in the list ` +
-                `${JSON.stringify(this.options.roles)} <= ${JSON.stringify(pin)}`);
-        }*/
-
+        // add user information
         if (user) {
             pin.user = user;
         }
@@ -98,7 +91,6 @@ export class SenecaPlum implements Microplum {
         if (user && user.name) {
             pin.userName = user.name;
         }
-
         // check if the pin exists
         if (!this.seneca["has"](pin)) {
             console.log(`WARNING: [Microplum] Method is not found for PIN:${JSON.stringify(pin)}`);
@@ -108,7 +100,7 @@ export class SenecaPlum implements Microplum {
                 throw new NotAllowedPlumError("Service not found.", { args: pin });
             }
         }
-
+        // call the service
         return new Promise((resolve, reject) => {
             this.act(pin, (err: any | null, data: any): void => {
                 if (err) {
