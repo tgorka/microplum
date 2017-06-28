@@ -81,6 +81,13 @@ export class SenecaPlum implements Microplum {
 
     public actPromise(pin: any, user?: any): Promise<any> {
         console.log(`[Microplum] CALL => ${JSON.stringify(pin)}`);
+        if (!pin.role || typeof pin.role !== "string" || !pin.cmd || typeof pin.cmd !== "string") {
+            throw new NotAllowedPlumError(`[act] there is no service with no string 'role' or 'cmd' parameter: ` +
+                `<= ${JSON.stringify(pin)}`);
+        } else if (!this.options.roles.includes(pin.role)) {
+            throw new NotAllowedPlumError(`[act] the role is not in the list ` +
+                `${JSON.stringify(this.options.roles)} <= ${JSON.stringify(pin)}`);
+        }
         // add user information
         if (user) {
             pin.user = user;
@@ -90,16 +97,6 @@ export class SenecaPlum implements Microplum {
         }
         if (user && user.name) {
             pin.userName = user.name;
-        }
-        // check if the pin exists
-        console.log(`INFO for the services: pin:[${pin}] has:[${this.seneca["has"](pin)}] list:[${this.seneca["list"](pin)}] find:[${this.seneca["find"](pin)}]`)
-        if (!this.seneca["find"](pin)) {
-            console.log(`WARNING: [Microplum] Method is not found for PIN:${JSON.stringify(pin)}`);
-            if (pin.nonErrorDefault) {
-                return Promise.resolve();
-            } else {
-                throw new NotAllowedPlumError("Service not found.", { args: pin });
-            }
         }
         // call the service
         return new Promise((resolve, reject) => {
@@ -182,7 +179,7 @@ export class SenecaPlum implements Microplum {
     }
 
     protected addBasicProperties(pin: any): any {
-        pin.provider = pin.provider || this.options.provider || this.options.app;
+        pin.provider = pin.provider || this.options.provider || "*";
         pin.version = pin.version || this.options.version;
         pin.subversion = pin.subversion || this.options.subversion;
         pin.revision = pin.revision || this.options.revision;

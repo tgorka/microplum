@@ -16,7 +16,7 @@ export interface Config extends DefaultConfig {
     /**
      * Available roles in the act method
      */
-    //roles: string[];
+    roles: string[];
     provider?: string;
     amqpUrl: string;
     debugUserId?: string;
