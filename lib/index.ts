@@ -74,8 +74,8 @@ export class SenecaPlum implements Microplum {
                     //type: "topic",
                     //name: "seneca.dlx",
                     options: {
-                        durable: false,
-                        autoDelete: true
+                        durable: true,
+                        autoDelete: false
                     }
                 }
             },
