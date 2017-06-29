@@ -62,21 +62,53 @@ export class SenecaPlum implements Microplum {
                 //type: "topic",
                 name: "seneca.topic",
                 options: {
-                    durable: true, // exchanges remain active when a server restarts
-                    autoDelete: false, // exchange is deleted when all queues have finished using it
+                    durable: false, // exchanges remain active when a server restarts
+                    autoDelete: true, // exchange is deleted when all queues have finished using it
                 }
             },
-            queues: {
-                action: {
-                    durable: false,
-                    prefix: 'seneca.action'
-                },
-                response: {
-                    prefix: "seneca.res",
+            deadLetter: {
+                /*queue: {
+                    name: "seneca.dlq"
+                },*/
+                exchange: {
+                    //type: "topic",
+                    //name: "seneca.dlx",
+                    options: {
+                        durable: false,
+                        autoDelete: true
+                    }
+                }
+            },
+            listen: {
+                /*channel: {
+                    "prefetch": 1
+                },*/
+                queues: {
+                    //prefix: "seneca.add",
+                    //separator: ".",
+                    options: {
+                        durable: false,
+                        arguments: {
+                            //"x-dead-letter-exchange": "seneca.dlx",
+                            "x-message-ttl": 10000
+                        }
+                    }
+                }
+            },
+            client: {
+                /*channel: {
+                    prefetch: 1
+                },*/
+                queues: {
+                    //prefix: "seneca.act",
                     //separator: ".",
                     options: {
                         autoDelete: true, // queue is deleted when all consumers have finished using it
                         exclusive: true, // queues may only be accessed by the current connection, and are deleted when that connection closes
+                        arguments: {
+                            //"x-dead-letter-exchange": "seneca.dlx",
+                            "x-message-ttl": 10000
+                        }
                     }
                 }
             },
@@ -99,17 +131,49 @@ export class SenecaPlum implements Microplum {
                     autoDelete: true, // exchange is deleted when all queues have finished using it
                 }
             },
-            queues: {
-                action: {
-                    durable: false,
-                    prefix: 'seneca.action'
-                },
-                response: {
-                    prefix: "seneca.res",
+            deadLetter: {
+                /*queue: {
+                 name: "seneca.dlq"
+                 },*/
+                exchange: {
+                    //type: "topic",
+                    //name: "seneca.dlx",
+                    options: {
+                        durable: false,
+                        autoDelete: true
+                    }
+                }
+            },
+            listen: {
+                /*channel: {
+                 "prefetch": 1
+                 },*/
+                queues: {
+                    //prefix: "seneca.add",
+                    //separator: ".",
+                    options: {
+                        durable: false,
+                        arguments: {
+                            //"x-dead-letter-exchange": "seneca.dlx",
+                            "x-message-ttl": 10000
+                        }
+                    }
+                }
+            },
+            client: {
+                /*channel: {
+                 prefetch: 1
+                 },*/
+                queues: {
+                    //prefix: "seneca.act",
                     //separator: ".",
                     options: {
                         autoDelete: true, // queue is deleted when all consumers have finished using it
                         exclusive: true, // queues may only be accessed by the current connection, and are deleted when that connection closes
+                        arguments: {
+                            //"x-dead-letter-exchange": "seneca.dlx",
+                            "x-message-ttl": 10000
+                        }
                     }
                 }
             },
