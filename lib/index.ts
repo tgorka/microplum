@@ -57,7 +57,29 @@ export class SenecaPlum implements Microplum {
         this.seneca.listen({
             type: "amqp",
             pin: this.options.pin,
-            url: this.options.amqpUrl
+            url: this.options.amqpUrl,
+            exchange: {
+                //type: "topic",
+                name: "seneca.topic",
+                options: {
+                    durable: true, // exchanges remain active when a server restarts
+                    autoDelete: false, // exchange is deleted when all queues have finished using it
+                }
+            },
+            queues: {
+                action: {
+                    durable: false,
+                    prefix: 'seneca.action'
+                },
+                response: {
+                    prefix: "seneca.res",
+                    //separator: ".",
+                    options: {
+                        autoDelete: true, // queue is deleted when all consumers have finished using it
+                        exclusive: true, // queues may only be accessed by the current connection, and are deleted when that connection closes
+                    }
+                }
+            },
         });
     }
 
