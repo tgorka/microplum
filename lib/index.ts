@@ -95,8 +95,8 @@ export class SenecaPlum implements Microplum {
                 //type: "topic",
                 name: "seneca.topic",
                 options: {
-                    durable: true, // exchanges remain active when a server restarts
-                    autoDelete: false, // exchange is deleted when all queues have finished using it
+                    durable: false, // exchanges remain active when a server restarts
+                    autoDelete: true, // exchange is deleted when all queues have finished using it
                 }
             },
             queues: {
