@@ -32,7 +32,7 @@ const DEFAULT_OPTIONS: DefaultConfig = {
     pin: [],
     clientPin: `provider:*,version:*,subversion:*,revision:*,role:*,environment:${currentEnvironment()}`,
     seneca: {
-        log: "standard",
+        //log: "standard",
         transport: {},
         timeout: 5000
     },
