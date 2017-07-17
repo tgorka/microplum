@@ -89,11 +89,11 @@ export abstract class ServiceEntity<F extends PlumFacade> implements Entity, Has
 export class SeedEntity extends ServiceEntity<SeedFacade> {
     protected addServices(seneca: any, options: any): void {
         if (this.emptyFacade.reset) {
-            seneca.add(this.pin(this.name, "reset", { conditions: "*" }),
+            seneca.add(this.pin(this.name, "reset"),
                 async args => this.createFacade(args).reset(args.seed));
         }
         if (this.emptyFacade.seed) {
-            seneca.add(this.pin(this.name, "seed", { conditions: "*" }),
+            seneca.add(this.pin(this.name, "seed"),
                 async args => this.createFacade(args).seed());
         }
     }
