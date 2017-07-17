@@ -87,6 +87,11 @@ export interface HasAct {
     act: (args: any) => Promise<any>;
 }
 
+export interface SeedFacade extends PlumFacade {
+    seed?(): Promise<void>;
+    reset?(doSeed: boolean): Promise<void>;
+}
+
 /**
  * Facade interface for the entity manipulation (CRUD+List). All the methods form the interface are optional.
  * All the methods are async

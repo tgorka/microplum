@@ -1,4 +1,4 @@
-import { Entity, HasAct, RestFacade } from "./model";
+import { Entity, HasAct, RestFacade, SeedFacade } from "./model";
 import { NotAllowedPlumError, ServerPlumError } from "./error";
 
 
@@ -84,6 +84,19 @@ export abstract class ServiceEntity<F extends PlumFacade> implements Entity, Has
         return pin;
     }
 
+}
+
+export class SeedEntity extends ServiceEntity<SeedFacade> {
+    protected addServices(seneca: any, options: any): void {
+        if (this.emptyFacade.reset) {
+            seneca.add(this.pin(this.name, "reset", { conditions: "*" }),
+                async args => this.createFacade(args).reset(args.seed));
+        }
+        if (this.emptyFacade.seed) {
+            seneca.add(this.pin(this.name, "seed", { conditions: "*" }),
+                async args => this.createFacade(args).seed());
+        }
+    }
 }
 
 /**
