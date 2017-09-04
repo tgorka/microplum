@@ -34,7 +34,7 @@ const DEFAULT_OPTIONS: DefaultConfig = {
     seneca: {
         //log: "standard",
         transport: {},
-        timeout: 5000
+        timeout: 10000
     },
 };
 
