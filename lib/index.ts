@@ -181,6 +181,26 @@ export class SenecaPlum implements Microplum {
         console.log(`[Microplum] Registered client for PIN: ${this.options.clientPin}`);
     }
 
+    public anonimize(pin: any): any {
+        if (pin.input) {
+            pin.input = this.anonimize(pin.input);
+        }
+        if (pin.cvx) {
+            pin.cvx = "***";
+        }
+        if (pin.cardNumber) {
+            if (pin.cardNumber.length > 8) {
+                pin.cardNumber = `**** ${pin.cardNumber}`;
+            } else if (pin.cardNumber.length > 12) {
+                pin.cardNumber =
+                    `${pin.cardNumber.substr(0,4)} **** ${pin.cardNumber.substr(pin.cardNumber.length)}}`;
+            } else {
+                pin.cardNumber = "****";
+            }
+        }
+        return pin;
+    }
+
     public act(pin: any, respond: seneca.ActCallback): void {
         this.addBasicProperties(pin);
         this.addAdditionalProperties(pin);
@@ -188,7 +208,7 @@ export class SenecaPlum implements Microplum {
     }
 
     public actPromise(pin: any, user?: any): Promise<any> {
-        console.log(`[Microplum] CALL => ${JSON.stringify(pin)}`);
+        console.log(`[Microplum] CALL => ${JSON.stringify(this.anonimize(pin))}`);
         if (!pin.role || typeof pin.role !== "string" || !pin.cmd || typeof pin.cmd !== "string") {
             throw new NotAllowedPlumError(`[act] there is no service with no string 'role' or 'cmd' parameter: ` +
                 `<= ${JSON.stringify(pin)}`);
@@ -213,7 +233,8 @@ export class SenecaPlum implements Microplum {
                     console.error(`[Microplum] <= ${JSON.stringify(pin)}`, err);
                     return reject(transformSenecaError(err));
                 } else {
-                    console.log(`[Microplum] ANSWER [status:${(data) ? data.status : ''}] <= ${JSON.stringify(pin)}`);
+                    console.log(`[Microplum] ANSWER [status:${(data) ? data.status : ''}] <= ${
+                        JSON.stringify(this.anonimize(pin))}`);
                     if (data && typeof data.status === "boolean") {
                         if (data.status) {
                             return resolve(data.data);
