@@ -182,6 +182,7 @@ export class SenecaPlum implements Microplum {
     }
 
     public anonymize(pin: any): any {
+        pin = Object.assign({}, pin);
         if (pin.input) {
             pin.input = this.anonymize(pin.input);
         }
