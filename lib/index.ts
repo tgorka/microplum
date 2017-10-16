@@ -181,9 +181,9 @@ export class SenecaPlum implements Microplum {
         console.log(`[Microplum] Registered client for PIN: ${this.options.clientPin}`);
     }
 
-    public anonimize(pin: any): any {
+    public anonymize(pin: any): any {
         if (pin.input) {
-            pin.input = this.anonimize(pin.input);
+            pin.input = this.anonymize(pin.input);
         }
         if (pin.cvx) {
             pin.cvx = "***";
@@ -208,7 +208,7 @@ export class SenecaPlum implements Microplum {
     }
 
     public actPromise(pin: any, user?: any): Promise<any> {
-        console.log(`[Microplum] CALL => ${JSON.stringify(this.anonimize(pin))}`);
+        console.log(`[Microplum] CALL => ${JSON.stringify(this.anonymize(pin))}`);
         if (!pin.role || typeof pin.role !== "string" || !pin.cmd || typeof pin.cmd !== "string") {
             throw new NotAllowedPlumError(`[act] there is no service with no string 'role' or 'cmd' parameter: ` +
                 `<= ${JSON.stringify(pin)}`);
@@ -234,7 +234,7 @@ export class SenecaPlum implements Microplum {
                     return reject(transformSenecaError(err));
                 } else {
                     console.log(`[Microplum] ANSWER [status:${(data) ? data.status : ''}] <= ${
-                        JSON.stringify(this.anonimize(pin))}`);
+                        JSON.stringify(this.anonymize(pin))}`);
                     if (data && typeof data.status === "boolean") {
                         if (data.status) {
                             return resolve(data.data);
