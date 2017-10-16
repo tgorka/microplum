@@ -189,11 +189,11 @@ export class SenecaPlum implements Microplum {
             pin.cvx = "***";
         }
         if (pin.cardNumber) {
-            if (pin.cardNumber.length > 8) {
-                pin.cardNumber = `**** ${pin.cardNumber}`;
-            } else if (pin.cardNumber.length > 12) {
+            if (pin.cardNumber.length > 12) {
                 pin.cardNumber =
-                    `${pin.cardNumber.substr(0,4)} **** ${pin.cardNumber.substr(pin.cardNumber.length)}}`;
+                    `${pin.cardNumber.substr(0,4)}****${pin.cardNumber.substr(pin.cardNumber.length)}}`;
+            } else if (pin.cardNumber.length > 8) {
+                pin.cardNumber = `****${pin.cardNumber.substr(pin.cardNumber.length)}`;
             } else {
                 pin.cardNumber = "****";
             }
