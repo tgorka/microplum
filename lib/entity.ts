@@ -1,25 +1,6 @@
-import { Entity, HasAct, RestFacade, SeedFacade } from "./model";
+import { Entity, HasAct, RestFacade, SeedFacade, PlumFacade, invalidActFun } from "./model";
 import { NotAllowedPlumError, ServerPlumError } from "./error";
 
-
-const invalidActFun: (args: { [key: string]: any }) => Promise<any> = (args: { [key: string]: any }): Promise<any> => {
-    console.log("[Microplum] '.act' not set in the service entity. Please use setAct method before.");
-    throw new ServerPlumError("'act' service not set.");
-};
-
-/**
- * Facade class that can be extended with specific methods.
- */
-export class PlumFacade implements HasAct {
-
-    public act: (args: { [key: string]: any }) => Promise<any>;
-    public args: { [key: string]: any };
-
-    constructor(act?: (args: any) => Promise<any>, args?: { [key: string]: any }) {
-        this.act = (act) ? act : invalidActFun;
-        this.args = (args) ? args : {};
-    }
-}
 
 export abstract class ServiceEntity<F extends PlumFacade> implements Entity, HasAct {
 

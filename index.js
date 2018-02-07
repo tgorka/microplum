@@ -8,6 +8,7 @@ const sourceMapSupport = require("source-map-support");
 sourceMapSupport.install();
 var lib_1 = require("./lib");
 exports.default = lib_1.SenecaPlum;
+__export(require("./lib/model"));
 __export(require("./lib/entity"));
 __export(require("./lib/error"));
 
