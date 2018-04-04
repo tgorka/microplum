@@ -10,22 +10,32 @@
     "start": "node ./node_modules/.bin/gulp",
     "build": "node ./node_modules/.bin/gulp build",
     "clean": "node ./node_modules/.bin/gulp clean",
-    "test": "node ./node_modules/.bin/gulp test"
+    "test": "node ./node_modules/.bin/gulp test",
+    "deploy-appsync": "serverless deploy-appsync",
+    "update-appsync": "serverless update-appsync",
+    "delete-appsync": "serverless delete-appsync",
+    "deploy": "serverless deploy && yarn update-appsync"
   },
   "repository": "https://github.com/tgorka/microplum.git",
   "author": "Tomasz Gorka <tomasz@gorka.org.pl>",
   "license": "MIT",
   "dependencies": {
-    "@types/lodash": "^4.14.68",
-    "@types/seneca": "^2.1.6",
+    "jsonpath": "^1.0.0",
     "lodash": "^4.17.4",
     "seneca": "3.3.0",
     "seneca-amqp-transport": "2.1.0",
     "source-map-support": "^0.4.15"
   },
   "devDependencies": {
+    "@types/jsonpath": "^0.2.0",
+    "@types/lodash": "^4.14.68",
+    "@types/node": "^9.6.2",
+    "@types/seneca": "2.1.6",
     "gulp": "^3.9.1",
-    "servicelychee": "https://github.com/tgorka/servicelychee",
+    "serverless": "^1.26.1",
+    "serverless-appsync-plugin": "0.0.7",
+    "serverless-plugin-typescript": "^1.1.5",
+    "servicelychee": "git+https://github.com/tgorka/servicelychee.git",
     "typescript": "^2.4.1"
   }
 }

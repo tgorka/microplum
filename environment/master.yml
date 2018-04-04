@@ -1,0 +1,5 @@
+APP_NAME: 'microplum'
+VERSION: 1
+ROLES:
+AMQP_URI: '"amqp://localhost/microplum'
+DEBUG_USER_ID:

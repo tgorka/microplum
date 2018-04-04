@@ -1,0 +1,16 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - npm install --production
+      - npm install serverless-plugin-typescript
+  pre_build:
+    commands:
+      - echo 'no pre build set'
+  build:
+    commands:
+      - npm run deploy
+  post_build:
+    commands:
+      - echo 'no post build set'
