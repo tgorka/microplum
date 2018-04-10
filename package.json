@@ -15,7 +15,7 @@
     "deploy-appsync": "serverless deploy-appsync",
     "update-appsync": "serverless update-appsync",
     "delete-appsync": "serverless delete-appsync",
-    "deploy": "serverless deploy && yarn update-appsync"
+    "deploy": "serverless deploy && npm run update-appsync"
   },
   "repository": "https://github.com/tgorka/microplum.git",
   "author": "Tomasz Gorka <tomasz@gorka.org.pl>",
