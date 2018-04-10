@@ -82,3 +82,5 @@ resources:
                     Resource:
                       - "arn:aws:lambda:${opt:region, 'eu-west-1'}:${self:custom.accountId}:function:microplum-master-act"
                       - "arn:aws:lambda:${opt:region, 'eu-west-1'}:${self:custom.accountId}:function:microplum-master-act:*"
+                      - "arn:aws:lambda:${opt:region, 'eu-west-1'}:${self:custom.accountId}:function:microplum-test-act"
+                      - "arn:aws:lambda:${opt:region, 'eu-west-1'}:${self:custom.accountId}:function:microplum-test-act:*"
