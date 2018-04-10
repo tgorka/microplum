@@ -25,7 +25,7 @@ custom:
     dataSources:
       - type: AWS_LAMBDA
         name: act
-        description: 'microplum DataSource'
+        description: 'microplum act DataSource'
         config:
           lambdaFunctionArn: "arn:aws:lambda:${opt:region, 'eu-west-1'}:${self:custom.accountId}:function:microplum-${self:custom.stage}-act"
           serviceRoleArn: "arn:aws:iam::${self:custom.accountId}:role/${self:custom.appSync.serviceRole}"
