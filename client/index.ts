@@ -1,4 +1,4 @@
-import { default as Service, Microplum } from "..";
+import Microplum from "..";
 
 const appName = process.env.APP_NAME || "microplum";
 const version = parseInt(process.env.VERSION || "1");
@@ -7,7 +7,7 @@ const ampqUrl = process.env.AMQP_URI || process.env.CLOUDAMQP_URL || "amqp://loc
 const debugUserId = process.env.DEBUG_USER_ID || null;
 
 const init = () => {
-    const microplum: Microplum = new Service({
+    const microplum = new Microplum({
         app: appName,
         version: version,
         roles: roles,
@@ -24,3 +24,4 @@ export const act = async (pin: any): Promise<any> => {
     microplum.close();
     return result;
 };
+export default act;

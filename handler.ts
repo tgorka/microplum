@@ -1,5 +1,5 @@
 import * as jsonpath from "jsonpath";
-import { act as microplumCall } from "./client";
+import microplumCall from "./client";
 
 
 // can encode data (ex. adding custom result code)
@@ -45,5 +45,5 @@ const handler = (fun: Function, obligatoryArgsJsonPath: string[] = [], optionalA
 };
 
 // functions
-export const microplum = handler(microplumCall, ["$"]);
+export const act = handler(microplumCall, ["$"]);
 

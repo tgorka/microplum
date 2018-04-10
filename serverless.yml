@@ -11,27 +11,28 @@ custom:
   configuration: ${opt:configuration, self:custom.envConfiguration}
   accountId: ${opt:accountId, env:AWS_ACCOUNT_ID} # replace this with your accountId
   appSync:
-    name: microplum  # defaults to api
+    name: microplum-${self:custom.stage}  # defaults to api
     apiId: ${opt:appsyncId, env:AWS_APPSYNC_ID} # only required for update-appsync
     authenticationType: AWS_IAM # AWS_IAM, AMAZON_COGNITO_USER_POOLS, API_KEY is supported
     mappingTemplates:
-      - dataSource: Microplum
+      - dataSource: act
         type: Query
         field: act
         request: "act-request.txt"
         response: "act-response.txt"
     # schema: # defaults schema.graphql
-    serviceRole: "microplum-${self:custom.stage}-service-role"
+    serviceRole: "microplumServiceRole"
     dataSources:
       - type: AWS_LAMBDA
-        name: Microplum
-        description: 'Microplum DataSource'
+        name: act
+        description: 'microplum DataSource'
         config:
-          lambdaFunctionArn: "arn:aws:lambda:${opt:region, 'eu-west-1'}:${self:custom.accountId}:function:ananas-${self:custom.stage}-microplum"
+          lambdaFunctionArn: "arn:aws:lambda:${opt:region, 'eu-west-1'}:${self:custom.accountId}:function:microplum-${self:custom.stage}-act"
           serviceRoleArn: "arn:aws:iam::${self:custom.accountId}:role/${self:custom.appSync.serviceRole}"
+
 provider:
   name: 'aws'
-  runtime: ${opt:runtime, 'nodejs6.10'}
+  runtime: 'nodejs6.10'
   stage: ${self:custom.stage} # Set the default stage used. Default is dev
   region: ${opt:region, 'eu-west-1'} # Overwrite the default region used. Default is us-east-1
   memorySize: 128 # Overwrite the default memory size. Default is 1024
@@ -52,32 +53,32 @@ package: # Optional deployment packaging configuration
   excludeDevDependencies: true # Config if Serverless should automatically exclude dev dependencies in the deployment package. Defaults to true
 
 functions:
-  microplum:
-    handler: handler.microplum
+  act:
+    handler: handler.act
 
 resources:
   Resources:
-    AnanasServiceRole:
+    microplumServiceRole:
       Type: "AWS::IAM::Role"
       Properties:
-      RoleName: "microplum-${self:custom.stage}-service-role"
-      AssumeRolePolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-        - Effect: "Allow"
-          Principal:
-          Service:
-            - "appsync.amazonaws.com"
-          Action:
-          - "sts:AssumeRole"
-      Policies:
-        - PolicyName: "microplum-${self:custom.stage}-policy"
-        PolicyDocument:
+        RoleName: "microplumServiceRole"
+        AssumeRolePolicyDocument:
           Version: "2012-10-17"
           Statement:
-          - Effect: "Allow"
-            Action:
-            - "lambda:invokeFunction"
-            Resource:
-            - "arn:aws:lambda:${opt:region, 'eu-west-1'}:${self:custom.accountId}:function:ananas-${self:custom.stage}-microplum"
-            - "arn:aws:lambda:${opt:region, 'eu-west-1'}:${self:custom.accountId}:function:ananas-${self:custom.stage}-microplum:*"
+            - Effect: "Allow"
+              Principal:
+                Service:
+                  - "appsync.amazonaws.com"
+              Action:
+                - "sts:AssumeRole"
+          Policies:
+            - PolicyName: "microplumPolicy"
+              PolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                  - Effect: "Allow"
+                    Action:
+                      - "lambda:invokeFunction"
+                    Resource:
+                      - "arn:aws:lambda:${opt:region, 'eu-west-1'}:${self:custom.accountId}:function:microplum-master-act"
+                      - "arn:aws:lambda:${opt:region, 'eu-west-1'}:${self:custom.accountId}:function:microplum-master-act:*"

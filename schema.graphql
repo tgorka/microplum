@@ -1,14 +1,6 @@
 type Query {
     # query microplum services
-    act(input: ActInput!): ActOutput!
-}
-
-input ActInput {
-    input: String!
-}
-
-type ActOutput {
-    name: String!
+    act(input: String!): String!
 }
 
 schema {

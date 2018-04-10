@@ -11,6 +11,7 @@
     "build": "node ./node_modules/.bin/gulp build",
     "clean": "node ./node_modules/.bin/gulp clean",
     "test": "node ./node_modules/.bin/gulp test",
+    "winfix": "ln -s node_modules .build/node_modules && ln -s package.json .build/package.json",
     "deploy-appsync": "serverless deploy-appsync",
     "update-appsync": "serverless update-appsync",
     "delete-appsync": "serverless delete-appsync",
