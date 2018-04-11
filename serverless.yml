@@ -71,16 +71,16 @@ resources:
                   - "appsync.amazonaws.com"
               Action:
                 - "sts:AssumeRole"
-          Policies:
-            - PolicyName: "microplumPolicy"
-              PolicyDocument:
-                Version: "2012-10-17"
-                Statement:
-                  - Effect: "Allow"
-                    Action:
-                      - "lambda:invokeFunction"
-                    Resource:
-                      - "arn:aws:lambda:${opt:region, 'eu-west-1'}:${self:custom.accountId}:function:microplum-master-act"
-                      - "arn:aws:lambda:${opt:region, 'eu-west-1'}:${self:custom.accountId}:function:microplum-master-act:*"
-                      - "arn:aws:lambda:${opt:region, 'eu-west-1'}:${self:custom.accountId}:function:microplum-test-act"
-                      - "arn:aws:lambda:${opt:region, 'eu-west-1'}:${self:custom.accountId}:function:microplum-test-act:*"
+        Policies:
+          - PolicyName: "microplumPolicy"
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: "Allow"
+                  Action:
+                    - "lambda:invokeFunction"
+                  Resource:
+                    - "arn:aws:lambda:${opt:region, 'eu-west-1'}:${self:custom.accountId}:function:microplum-master-act"
+                    - "arn:aws:lambda:${opt:region, 'eu-west-1'}:${self:custom.accountId}:function:microplum-master-act:*"
+                    - "arn:aws:lambda:${opt:region, 'eu-west-1'}:${self:custom.accountId}:function:microplum-test-act"
+                    - "arn:aws:lambda:${opt:region, 'eu-west-1'}:${self:custom.accountId}:function:microplum-test-act:*"
