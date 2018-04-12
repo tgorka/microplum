@@ -1,3 +1,4 @@
+import "source-map-support/register";
 import * as jsonpath from "jsonpath";
 import microplumCall from "./client";
 
