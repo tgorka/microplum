@@ -1,6 +1,6 @@
 type Query {
     # query microplum services
-    act(input: String!): String!
+    act(arguments: String!): String!
 }
 
 schema {
