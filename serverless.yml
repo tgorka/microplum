@@ -39,7 +39,12 @@ provider:
   timeout: 10 # The default is 6 seconds. Note: API Gateway current maximum is 30 seconds
   logRetentionInDays: 30 # Set the default RetentionInDays for a CloudWatch LogGroup
   versionFunctions: true # Optional function versioning
-  environment: ${file(./environment/${self:custom.configuration}.yml)} # default env variables from the files per stage
+  environment: # default env variables from the files per stage
+    APP_NAME: ${env:APP_NAME, file(./environment/${self:custom.configuration}.yml):APP_NAME}
+    VERSION: ${env:VERSION, file(./environment/${self:custom.configuration}.yml):VERSION}
+    ROLES: ${env:ROLES, file(./environment/${self:custom.configuration}.yml):ROLES}
+    AMQP_URI: ${env:AMQP_URI, file(./environment/${self:custom.configuration}.yml):AMQP_URI}
+    DEBUG_USER_ID: ${env:DEBUG_USER_ID, file(./environment/${self:custom.configuration}.yml):DEBUG_USER_ID}
 
 package: # Optional deployment packaging configuration
   include: # Specify the directories and files which should be included in the deployment package
