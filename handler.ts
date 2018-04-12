@@ -1,12 +1,16 @@
 import "source-map-support/register";
+import * as _debug from "debug";
 import * as jsonpath from "jsonpath";
 import microplumCall from "./client";
 
+const debug = _debug("microplum-debug");
 
 // can encode data (ex. adding custom result code)
 const handler = (fun: Function, obligatoryArgsJsonPath: string[] = [], optionalArgsJsonPath: string[] = []) => {
     return async (event, context, callback): Promise<void> => {
         try {
+            debug(`[handler] calling function with event ${event}`);
+            debug(event);
             event = event && JSON.parse(event);
             const body: any = event.body || event.arguments || event;
             const nonExistingObligatoryArgs = obligatoryArgsJsonPath
@@ -37,7 +41,6 @@ const handler = (fun: Function, obligatoryArgsJsonPath: string[] = [], optionalA
             err.body = err.body || err.message || err.msg || err.errorMessage;
             callback(err);
             //throw err;
-            console.log(err);
             // force to exit the process so no waiting for timeout
             process.exit(-1);
         }

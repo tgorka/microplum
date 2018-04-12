@@ -7,7 +7,7 @@ const roles = (process.env.ROLES || "").split(",");
 const ampqUrl = process.env.AMQP_URI || process.env.CLOUDAMQP_URL || "amqp://localhost/microplum";
 const debugUserId = process.env.DEBUG_USER_ID || null;
 
-const debug = _debug("microplum");
+const debug = _debug("microplum-debug");
 const info = _debug("microplum-info");
 
 const init = () => {
