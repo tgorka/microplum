@@ -6,9 +6,8 @@ import microplumCall from "./client";
 const handler = (fun: Function, obligatoryArgsJsonPath: string[] = [], optionalArgsJsonPath: string[] = []) => {
     return async (event, context, callback): Promise<void> => {
         try {
-            const body: any = (!!event.body) && JSON.parse(event.body) ||
-                (!!event.arguments) && JSON.parse(event.arguments) ||
-                event;
+            event = event && JSON.parse(event);
+            const body: any = event.body || event.arguments || event;
             const nonExistingObligatoryArgs = obligatoryArgsJsonPath
                 .filter(argName => jsonpath.value(body, argName) === undefined);
             if (nonExistingObligatoryArgs.length > 0) {

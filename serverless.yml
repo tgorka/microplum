@@ -45,6 +45,7 @@ provider:
     ROLES: ${env:ROLES, file(./environment/${self:custom.configuration}.yml):ROLES}
     AMQP_URI: ${env:AMQP_URI, file(./environment/${self:custom.configuration}.yml):AMQP_URI}
     DEBUG_USER_ID: ${env:DEBUG_USER_ID, file(./environment/${self:custom.configuration}.yml):DEBUG_USER_ID}
+    DEBUG: ${env:DEBUG, file(./environment/${self:custom.configuration}.yml):DEBUG}
 
 package: # Optional deployment packaging configuration
   include: # Specify the directories and files which should be included in the deployment package
