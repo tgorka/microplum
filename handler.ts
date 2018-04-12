@@ -9,10 +9,10 @@ const debug = _debug("microplum-debug");
 const handler = (fun: Function, obligatoryArgsJsonPath: string[] = [], optionalArgsJsonPath: string[] = []) => {
     return async (event, context, callback): Promise<void> => {
         try {
-            debug(`[handler] calling function with event ${event}`);
-            debug(event);
+            debug(`[handler] calling with event ${JSON.stringify(event)}; context ${JSON.stringify(context)}`);
             event = event && JSON.parse(event);
-            const body: any = event.body || event.arguments || event;
+            let body: any = event.body || event.arguments || event;
+            body = (typeof body === "string") ? JSON.parse(body) : body;
             const nonExistingObligatoryArgs = obligatoryArgsJsonPath
                 .filter(argName => jsonpath.value(body, argName) === undefined);
             if (nonExistingObligatoryArgs.length > 0) {

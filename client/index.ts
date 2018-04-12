@@ -23,15 +23,15 @@ const init = () => {
 };
 
 export const act = async (pin: any): Promise<any> => {
-    info(`[microplum][CALL]<<{role:${pin.role},cmd:${pin.cmd}...}`);
-    debug(`[microplum][CALL]<<${JSON.stringify(pin)}`);
+    info(`[client][CALL]<<{role:${pin.role},cmd:${pin.cmd}...}`);
+    debug(`[client][CALL]<<${JSON.stringify(pin)}`);
     const microplum = init();
-    debug("[microplum] client initialized");
+    debug("[client] initialized");
     const result = await microplum.actPromise(pin);
-    debug(`[microplum][RESULT]>>${JSON.stringify(result)}`);
+    debug(`[client][RESULT]>>${JSON.stringify(result)}`);
     microplum.close();
-    debug("[microplum] closed");
-    info(`[microplum][RESULT]>>success`);
+    debug("[client] closed");
+    info(`[client][RESULT]>>success`);
     return result;
 };
 export default act;
