@@ -3,14 +3,13 @@ import * as _debug from "debug";
 import * as jsonpath from "jsonpath";
 import microplumCall from "./client";
 
-const debug = _debug("microplum-debug");
+const debug = _debug("microplum-debug-handler");
 
 // can encode data (ex. adding custom result code)
 const handler = (fun: Function, obligatoryArgsJsonPath: string[] = [], optionalArgsJsonPath: string[] = []) => {
     return async (event, context, callback): Promise<void> => {
         try {
-            debug(`[handler] calling with event ${JSON.stringify(event)}; context ${JSON.stringify(context)}`);
-            event = event && JSON.parse(event);
+            debug(`calling with event ${JSON.stringify(event)}; context ${JSON.stringify(context)}`);
             let body: any = event.body || event.arguments || event;
             body = (typeof body === "string") ? JSON.parse(body) : body;
             const nonExistingObligatoryArgs = obligatoryArgsJsonPath
@@ -28,9 +27,9 @@ const handler = (fun: Function, obligatoryArgsJsonPath: string[] = [], optionalA
                 statusCode: 200,
                 body: JSON.stringify(results),
             };
-            console.log(`Returning value ${JSON.stringify(response)}`);
+            debug(`returning value ${JSON.stringify(response)}`);
             callback(null, response);
-            console.log('afer the response')
+            debug('calling afer the response')
             // force to exit the process so no waiting for timeout
             //process.exit(0);
         } catch (err) {

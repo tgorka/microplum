@@ -3,4 +3,4 @@ VERSION: 1
 ROLES: ''
 AMQP_URI: 'amqp://localhost/microplum'
 DEBUG_USER_ID: ''
-DEBUG: 'microplum-info'
+DEBUG: 'microplum-error-*,microplum-info-*,microplum-debug-*'
