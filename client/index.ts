@@ -22,7 +22,7 @@ const init = () => {
     return microplum;
 };
 
-export const act = async (pin: any): Promise<any> => {
+export const act = async (pin: any): Promise<string> => {
     info(`[CALL]<<{role:${pin.role},cmd:${pin.cmd}...}`);
     debug(`[CALL]<<${JSON.stringify(pin)}`);
     const microplum = init();
@@ -32,6 +32,6 @@ export const act = async (pin: any): Promise<any> => {
     microplum.close();
     debug("closed");
     info(`[RESULT]>>success`);
-    return result;
+    return JSON.stringify(result);
 };
 export default act;
