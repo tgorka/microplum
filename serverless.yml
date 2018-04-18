@@ -39,6 +39,7 @@ provider:
   timeout: 10 # The default is 6 seconds. Note: API Gateway current maximum is 30 seconds
   logRetentionInDays: 30 # Set the default RetentionInDays for a CloudWatch LogGroup
   versionFunctions: true # Optional function versioning
+  role: "arn:aws:iam::${self:custom.accountId}:role/${self:custom.appSync.serviceRole}" # role to run the lambda
   environment: # default env variables from the files per stage
     APP_NAME: ${env:APP_NAME, file(./environment/${self:custom.configuration}.yml):APP_NAME}
     VERSION: ${env:VERSION, file(./environment/${self:custom.configuration}.yml):VERSION}
