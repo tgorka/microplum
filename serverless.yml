@@ -21,7 +21,7 @@ custom:
         request: "act-request.txt"
         response: "act-response.txt"
     # schema: # defaults schema.graphql
-    serviceRole: "microplumServiceRole"
+    serviceRole: "microplumServiceRole-${self:custom.stage}"
     dataSources:
       - type: AWS_LAMBDA
         name: act
@@ -67,7 +67,7 @@ resources:
     microplumServiceRole:
       Type: "AWS::IAM::Role"
       Properties:
-        RoleName: "microplumServiceRole"
+        RoleName: "microplumServiceRole-${self:custom.stage}"
         AssumeRolePolicyDocument:
           Version: "2012-10-17"
           Statement:
@@ -86,7 +86,5 @@ resources:
                   Action:
                     - "lambda:invokeFunction"
                   Resource:
-                    - "arn:aws:lambda:${opt:region, 'eu-west-1'}:${self:custom.accountId}:function:microplum-master-act"
-                    - "arn:aws:lambda:${opt:region, 'eu-west-1'}:${self:custom.accountId}:function:microplum-master-act:*"
-                    - "arn:aws:lambda:${opt:region, 'eu-west-1'}:${self:custom.accountId}:function:microplum-test-act"
-                    - "arn:aws:lambda:${opt:region, 'eu-west-1'}:${self:custom.accountId}:function:microplum-test-act:*"
+                    - "arn:aws:lambda:${opt:region, 'eu-west-1'}:${self:custom.accountId}:function:microplum-${self:custom.stage}-act"
+                    - "arn:aws:lambda:${opt:region, 'eu-west-1'}:${self:custom.accountId}:function:microplum-${self:custom.stage}-act:*"
